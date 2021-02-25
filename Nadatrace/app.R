@@ -52,7 +52,17 @@ ui <- fluidPage(theme = nada_theme,
                                     )
                                     ),
                            tabPanel("Food Waste Diversion"),
-                           tabPanel("2019 vs. 2020"),
+                           tabPanel("2019 vs. 2020",
+                                    sidebarLayout(
+                                        sidebarPanel("Graph input",
+                                                     radioButtons(
+                                                         inputId = "footprint_year",
+                                                         label = "Choose year to view carbonfootprint:"
+                                                     )
+                                        ),
+                                        mainPanel()
+                                    )
+                           ),
                            tabPanel("Emissions Sources"  # Tab names need work 
                                     
                                     )  
