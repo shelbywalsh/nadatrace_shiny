@@ -15,13 +15,13 @@ ui <- fluidPage(theme = nada_theme,
                 # Application title
                 navbarPage(h2("NADAtrace Carbon Footprint Market Tool"),
                            
-                           tabPanel("About the Tool",
+                           tabPanel("About Nada and the Tool",
                                     
                                     mainPanel(
                                         
                                         h3("Background (information about Nada, and the motivation behind measuring their carbon footprint.)"),
                                         
-                                        h5("Background body text: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."),
+                                        h5("Nada is a Canadian grocery store that offers sustainably sourced foods, zero waste lifestyle products, and a package-free shopping experience. The business is also committed to environmental and social justice. One of the ways Nada is working to further reduce its environmental impacts is quantifying the carbon footprint of its business model"),
                                         
                                         h3("About the Tool"),
                                         
