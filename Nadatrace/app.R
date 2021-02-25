@@ -25,7 +25,7 @@ ui <- fluidPage(theme = nada_theme,
                                         
                                         h3("About the Tool"),
                                         
-                                        h5("This set of tools allows the user to visually explore the carbon footprint of Nada, a zero-waste grocery store, frok 2019 and 2020. 4 interactive data visualization tools are included in the subsequent tabs:"),
+                                        h5("This set of tools allows the user to visually explore the carbon footprint of Nada from 2019 and 2020. 4 interactive data visualization tools are included in the subsequent tabs:"),
                                         
                                         h5("Tab 1: Scope 3 CO2 emissions broken down by food category or supplier;"),
                                         
@@ -35,7 +35,7 @@ ui <- fluidPage(theme = nada_theme,
                                         
                                         h5("Tab 4: Interactive treemap (or stacked bar chart) of total carbon footprint."),
                                         
-                                        h5("Data Source: Nada.")
+                                        h5("Data Source: Nada Grocery.")
                                         
                                     )
                                         
@@ -53,7 +53,7 @@ ui <- fluidPage(theme = nada_theme,
                                     ),
                            tabPanel("Food Waste Diversion"),
                            tabPanel("2019 vs. 2020"),
-                           tabPanel("Where Are Emissions Coming From?"  # Tab names need work 
+                           tabPanel("Emissions Sources"  # Tab names need work 
                                     
                                     )  
                            )
