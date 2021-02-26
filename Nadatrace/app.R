@@ -3,12 +3,20 @@ library(shiny)
 library(tidyverse)
 library(shinythemes)
 library(bslib)
+library(janitor)
 
 nada_theme <- bs_theme(
     bg = "#ff6666",
     fg = "white",
     primary = "black",
     base_font = font_google("Oswald"))
+
+# Load data
+all_emissions_19 <- read_csv("2019_all_emissions.csv") %>% 
+    clean_names()
+
+all_emissions_20 <- read_csv("2020_all_emissions.csv") %>% 
+    clean_names()
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(theme = nada_theme,
@@ -54,13 +62,18 @@ ui <- fluidPage(theme = nada_theme,
                            tabPanel("Food Waste Diversion"),
                            tabPanel("2019 vs. 2020",
                                     sidebarLayout(
-                                        sidebarPanel("Graph input",
-                                                     radioButtons(
-                                                         inputId = "footprint_year",
-                                                         label = "Choose year to view carbonfootprint:"
-                                                     )
+                                        mainPanel("Graph description",
+                                                  plotOutput("all_plot_19"
+                                                             )
                                         ),
-                                        mainPanel()
+                                        sidebarPanel("Explaning this part of the tool",
+                                                     radioButtons(
+                                                         inputId = "footprint_scope",
+                                                         label = "Choose Scope to compare carbon footprint:",
+                                                         choices = c("Scope 1", "Scope 2", "Scope 3"))
+                                                     )
+                                        )
+                                        
                                     )
                            ),
                            tabPanel("Emissions Sources"  # Tab names need work 
@@ -68,7 +81,7 @@ ui <- fluidPage(theme = nada_theme,
                                     )  
                            )
                 
-)
+
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
@@ -80,6 +93,16 @@ server <- function(input, output) {
         
         # draw the histogram with the specified number of bins
         hist(x, breaks = bins, col = 'darkgray', border = 'white')
+    })
+    
+    all_em19_reactive <- reactive({
+        all_emissions_19 %>% 
+            filter(scope %in% input$footprint_scope)
+    })
+    
+    output$all_plot_19 <- renderPlot({
+        ggplot(data = all_em19_reactive(), aes(x = scope, y = kg_co2e)) +
+            geom_col(aes(color = sub_group))
     })
 }
 
