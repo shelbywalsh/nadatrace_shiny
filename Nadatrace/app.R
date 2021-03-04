@@ -4,6 +4,7 @@ library(tidyverse)
 library(shinythemes)
 library(bslib)
 library(janitor)
+library(here)
 
 nada_theme <- bs_theme(
     bg = "#ff6666",
@@ -16,6 +17,9 @@ all_emissions_19 <- read_csv("2019_all_emissions.csv") %>%
     clean_names()
 
 all_emissions_20 <- read_csv("2020_all_emissions.csv") %>% 
+    clean_names()
+
+total_emissions <- read_csv(here("Nadatrace","allemissions.csv")) %>% 
     clean_names()
 
 # Define UI for application that draws a histogram
