@@ -1,0 +1,19 @@
+﻿Scope,Category,Sub Group,kg_co2e
+SCOPE 1 & 2,Scope 1,Scope 1,670
+SCOPE 1 & 2,Scope 2,Scope 2,980
+SCOPE 3,Transportation,Uline,31000
+SCOPE 3,Transportation,Discovery Organics,3600
+SCOPE 3,Transportation,Dean's Milkman,3500
+SCOPE 3,Transportation,Tree Island,3400
+SCOPE 3,Transportation,Rehoboth Farm,2700
+SCOPE 3,Transportation,Other 101 Vendors,9200
+SCOPE 3,Purchased Goods & Services,Vegetable & Melon Farming,86000
+SCOPE 3,Purchased Goods & Services,Fruit & Tree Nut Farming,48000
+SCOPE 3,Purchased Goods & Services,Grain Farming,41000
+SCOPE 3,Purchased Goods & Services,Oilseed Farming,31000
+SCOPE 3,Purchased Goods & Services,Other Crop Farming,20000
+SCOPE 3,Purchased Goods & Services,Other 31 Categories,53000
+Diversion,Compost,Compost,-750
+Diversion,Café,High,-11000
+Diversion,Café,Medium,-5300
+Diversion,Café,Low,-3300
