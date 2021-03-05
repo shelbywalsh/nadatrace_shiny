@@ -1,6 +1,6 @@
 ﻿Year,Scope,Category,Sub Group,kg_co2e
-2020,SCOPE 1 & 2,Scope 1 & 2,SCOPE 1,560
-2020,SCOPE 1 & 2,Scope 1 & 2,SCOPE 2,880
+2020,SCOPE 1,SCOPE 1,SCOPE 1,560
+2020,SCOPE 2,SCOPE 2,SCOPE 2,880
 2020,SCOPE 3,Transportation,Uline,36000
 2020,SCOPE 3,Transportation,Dean's Milkman,2800
 2020,SCOPE 3,Transportation,Tree Island,2500
@@ -17,8 +17,8 @@
 2020,OFFSETS,CAFÉ,High,-35000
 2020,OFFSETS,CAFÉ,Medium,-16000
 2020,OFFSETS,CAFÉ,Low,-10000
-2019,SCOPE 1 & 2,Scope 1,Scope 1,670
-2019,SCOPE 1 & 2,Scope 2,Scope 2,980
+2019,SCOPE 1,SCOPE 1,Scope 1,670
+2019,SCOPE 2,SCOPE 2,Scope 2,980
 2019,SCOPE 3,Transportation,Uline,31000
 2019,SCOPE 3,Transportation,Discovery Organics,3600
 2019,SCOPE 3,Transportation,Dean's Milkman,3500
@@ -31,7 +31,7 @@
 2019,SCOPE 3,Purchased Goods & Services,Oilseed Farming,31000
 2019,SCOPE 3,Purchased Goods & Services,Other Crop Farming,20000
 2019,SCOPE 3,Purchased Goods & Services,Other 31 Categories,53000
-2019,Diversion,Compost,Compost,-750
-2019,Diversion,Café,High,-11000
-2019,Diversion,Café,Medium,-5300
-2019,Diversion,Café,Low,-3300
+2019,OFFSETS,Compost,Compost,-750
+2019,OFFSETS,Café,High,-11000
+2019,OFFSETS,Café,Medium,-5300
+2019,OFFSETS,Café,Low,-3300

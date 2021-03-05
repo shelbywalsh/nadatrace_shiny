@@ -1,0 +1,39 @@
+---
+title: "practice_shiny_plots"
+author: "Shelby Walsh"
+date: "3/4/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(shinythemes)
+library(bslib)
+library(janitor)
+library(here)
+```
+
+```{r}
+all <- read_csv(here("Nadatrace", "allemissions.csv")) %>% 
+  clean_names() %>% 
+  group_by(year) 
+
+ggplot(data = all, aes( y = kg_co2e)) +
+  geom_histogram(aes(color = year))
+
+n_19 <- all %>% 
+  filter(year == 2019) %>% 
+  group_by(category) %>% 
+  summarise(scope, kg_co2e)
+
+n_19_3 <- all %>% 
+  filter(year == 2019) %>% 
+  filter(scope == "SCOPE 3") %>% 
+  mutate(total_kg_co2e = sum(kg_co2e)) %>% 
+  summarise(total_kg_co2e)
+
+ggplot(data = n_19, aes(x = category)) +
+  geom_bar()
+```
+

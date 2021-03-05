@@ -13,17 +13,17 @@ nada_theme <- bs_theme(
     base_font = font_google("Oswald"))
 
 # Load data
-all_emissions_19 <- read_csv("2019_all_emissions.csv") %>% 
+all_emissions_19 <- read_csv(here("Nadatrace","2019_all_emissions.csv")) %>% 
     clean_names()
 
-all_emissions_20 <- read_csv("2020_all_emissions.csv") %>% 
+all_emissions_20 <- read_csv(here("Nadatrace","2020_all_emissions.csv")) %>% 
     clean_names()
 
 total_emissions <- read_csv(here("Nadatrace","allemissions.csv")) %>% 
     clean_names()
 
 # Define UI for application that draws a histogram
-ui <- fluidPage(theme = nada_theme,
+ui <- fluidPage (theme = nada_theme,
                 # Application title
                 navbarPage(h2("NADAtrace Carbon Footprint Market Tool"),
                            
@@ -63,7 +63,19 @@ ui <- fluidPage(theme = nada_theme,
                                         mainPanel()
                                     )
                                     ),
-                           tabPanel("Food Waste Diversion"),
+                           tabPanel("Food Waste Diversion",
+                                    sidebarLayout(
+                                        mainPanel("Food Waste description",
+                                                  plotOutput("food_waste"
+                                                  )
+                                        ),
+                                        sidebarPanel("Explaning this part of the tool",
+                                    checkboxGroupInput(
+                                        inputId = "Id050",
+                                        label = "Select Waste", 
+                                        choices = c("Compost", "Café")
+                                    )
+                                    ))),
                            tabPanel("2019 vs. 2020",
                                     sidebarLayout(
                                         mainPanel("Graph description",
@@ -78,12 +90,24 @@ ui <- fluidPage(theme = nada_theme,
                                                      )
                                         )
                                         
-                                    )
-                           ),
+                                    ),
+                           tabPanel("Compare Footprints",
+                                    sidebarLayout(
+                                        mainPanel("Graph description",
+                                                  plotOutput("total_emission"
+                                                             )
+                                                  ),
+                                        sidebarPanel("Select a Year to view Nada Grocery's emissions",
+                                                     radioButtons(
+                                                         inputId = "year_emissions",
+                                                         label = "Select Year:",
+                                                         choices = c("2019", "2020")
+                                                     ))
+                                    )),
                            tabPanel("Emissions Sources"  # Tab names need work 
                                     
                                     )  
-                           )
+                           ))
                 
 
 
@@ -108,7 +132,16 @@ server <- function(input, output) {
         ggplot(data = all_em19_reactive(), aes(x = scope, y = kg_co2e)) +
             geom_col(aes(color = sub_group))
     })
+    
+    total_emission_reactive <- reactive({
+        total_emissions %>% 
+            filter(year %in% input$year_emissions)
+    })
+    
+    output$total_emissions <- renderPlot({
+        ggplot(data = total_emissions(), aes(x = scope, y = kg_co2e)) +
+            geom_col(aes(color = sub_group))
+    })
 }
 
-# Run the application 
 shinyApp(ui = ui, server = server)
