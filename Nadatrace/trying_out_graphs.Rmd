@@ -12,12 +12,20 @@ library(shinythemes)
 library(bslib)
 library(janitor)
 library(here)
+library(ggraph)
+library(ggiraph)
+library(igraph)
+library(viridis)
+library(packcircles)
 ```
 
 ```{r}
 all <- read_csv(here("Nadatrace", "allemissions.csv")) %>% 
   clean_names() %>% 
-  group_by(year) 
+  group_by(year)
+
+cf <- all %>% 
+  filter(!scope == "OFFSETS")
 
 ggplot(data = all, aes( y = kg_co2e)) +
   geom_histogram(aes(color = year))
@@ -29,11 +37,93 @@ n_19 <- all %>%
 
 n_19_3 <- all %>% 
   filter(year == 2019) %>% 
-  filter(scope == "SCOPE 3") %>% 
-  mutate(total_kg_co2e = sum(kg_co2e)) %>% 
-  summarise(total_kg_co2e)
+  filter(scope == "SCOPE 3") 
 
-ggplot(data = n_19, aes(x = category)) +
-  geom_bar()
+ggplot(data = n_19_3, aes(x = sub_group, y = kg_co2e)) +
+  geom_col()
+
+packing <- circleProgressiveLayout(cf$kg_co2e, sizetype='area')
+
+data <- cbind(cf, packing)
+
+dat.gg <- circleLayoutVertices(packing, npoints=50)
+
+ggplot() +
+  geom_polygon(data = dat.gg, aes(x, y, sub_group = id, fill=as.factor(id)), colour = "black", alpha = 0.6) +
+  
+  # Add text in the center of each bubble + control its size
+  geom_text(data = data, aes(x, y, size=kg_co2e, label = sub_group)) +
+  scale_size_continuous(range = c(1,4)) +
+  
+  # General theme:
+  theme_void() + 
+  theme(legend.position="none") +
+  coord_equal()
+
+dat.gg$kg_co2e <- rep(data$kg_co2e, each=51)
+
+# Plot
+ggplot() + 
+  
+  # Make the bubbles
+  geom_polygon(data = dat.gg, aes(x, y, group = id, fill=kg_co2e), colour = "black", alpha = 0.6) +
+  scale_fill_distiller(palette = "RdPu", direction = 1 ) +
+ 
+  # Add text in the center of each bubble + control its size
+  geom_text(data = data, aes(x, y, size=kg_co2e, label = sub_group)) +
+  scale_size_continuous(range = c(1,4)) +
+ 
+  # General theme:
+  theme_void()  + 
+  theme(legend.position="none") + 
+  coord_equal()
+
 ```
+
+```{r}
+cf_20 <- cf %>% 
+  filter(year == "2020")
+
+packing_20 <- circleProgressiveLayout(cf_20$kg_co2e, sizetype='area')
+
+data_20 <- cbind(cf_20, packing_20)
+
+dat.gg_20 <- circleLayoutVertices(packing_20, npoints=50)
+
+ggplot() +
+  geom_polygon(data = dat.gg_20, aes(x, y, sub_group = id, fill=as.factor(id)), colour = "black", alpha = 0.6) +
+  
+  # Add text in the center of each bubble + control its size
+  geom_text(data = data_20, aes(x, y, size=kg_co2e, label = sub_group)) +
+  scale_size_continuous(range = c(1,4)) +
+  
+  # General theme:
+  theme_void() + 
+  theme(legend.position="none") +
+  coord_equal()
+
+dat.gg_20$kg_co2e <- rep(data_20$kg_co2e, each=51)
+
+# Plot
+p <- ggplot() + 
+  
+  # Make the bubbles
+  geom_polygon(data = dat.gg_20, aes(x, y, group = id, fill=kg_co2e), colour = "black", alpha = 0.6) +
+  scale_fill_distiller(palette = "RdPu", direction = 1 ) +
+ 
+  # Add text in the center of each bubble + control its size
+  geom_text(data = data_20, aes(x, y, size=kg_co2e, label = sub_group)) +
+  scale_size_continuous(range = c(1,4)) +
+ 
+  # General theme:
+  theme_void()  + 
+  theme(legend.position="none") + 
+  coord_equal()
+p
+
+widg <- ggiraph(ggobj = p, width_svg = 7, height_svg = 7)
+
+widg
+```
+
 
