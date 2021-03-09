@@ -22,6 +22,10 @@ total_emissions_20 <- read_csv(here("Nadatrace","2020_all_emissions.csv")) %>%
 total_emissions <- read_csv(here("Nadatrace","allemissions.csv")) %>% 
     clean_names()
 
+cf <- total_emissions %>% 
+    filter(!scope == "OFFSETS") %>% 
+    mutate(year = as.character(year))
+
 # Define UI for application that draws a histogram
 ui <- fluidPage (theme = nada_theme,
                 # Application title
@@ -124,30 +128,21 @@ server <- function(input, output) {
     })
 
 # graph for "2019 vs 2020" tab:    
-    tot_em_reactive <- reactive({
-        total_emissions %>% 
-            filter(!scope == "OFFSETS") %>% 
-            filter(scope == input$footprint_scope)
-    })
     
+    # reactive data frame
+    tot_em_reactive <- reactive({
+        cf %>% 
+            filter(scope %in% input$footprint_scope)
+    })
+
+    # output plot #1
     output$tot_em_plot <- renderPlot({
         ggplot(data = tot_em_reactive(), aes(x = year, y = kg_co2e)) +
-            geom_col(aes(fill = category))
+            geom_col(aes(fill = category)) +
+            theme_minimal()
     })
     
-    tot_em19_reactive <- reactive({
-        total_emissions_19 %>% 
-            filter(!scope == "OFFSETS") %>% 
-            filter(scope == input$footprint_scope)
-    })
-    
-    output$tot_em19_plot <- renderPlot({
-        ggplot(data = tot_em19_reactive(), aes(x = year, y = kg_co2e)) +
-            geom_col(aes(fill = category))
-    })
-    
-    
- # graph for "Compare Footprints" tab
+# graph for "Compare Footprints" tab
        total_emission_reactive <- reactive({
         total_emissions %>% 
             filter(year %in% input$year_emissions)
