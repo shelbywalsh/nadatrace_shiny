@@ -22,6 +22,10 @@ all <- read_csv(here("Nadatrace", "allemissions.csv")) %>%
 
 cf <- all %>% 
   filter(!scope == "OFFSETS")
+
+scope3 <- all %>% 
+  filter(scope == "SCOPE 3") %>% 
+  mutate(year = as.character(year))
 ```
 
 ```{r}
@@ -37,5 +41,25 @@ test_df <- all %>%
 # test graph
 ggplot(data = test_df) +
   geom_col(aes(x = year, y = kg_co2e, fill = category)) 
+```
+
+
+```{r}
+# basic graph for scope3 tab
+
+# based on the user selection 
+scope3_trans <- scope3 %>% 
+  filter(category == "Transportation") 
+
+scope3_pgs <- scope3 %>% 
+  filter(category == "Purchased Goods & Services")
+
+ggplot(data = scope3_trans, aes(x = year, y = kg_co2e, fill = sub_group)) +
+  geom_col() +
+  theme_minimal()
+
+ggplot(data = scope3_pgs, aes(x = year, y = kg_co2e, fill = sub_group)) +
+  geom_col() +
+  theme_minimal()
 ```
 
