@@ -17,6 +17,8 @@ library(ggiraph)
 library(igraph)
 library(viridis)
 library(packcircles)
+library(data.tree)
+library(circlepackeR)
 ```
 
 ```{r}
@@ -125,5 +127,24 @@ widg <- ggiraph(ggobj = p, width_svg = 7, height_svg = 7)
 
 widg
 ```
+
+```{r}
+cir <- read_csv("circle.csv")
+
+circle <- factor(c("2019", "2020"))
+
+
+# Change the format. This use the data.tree library. This library needs a column that looks like root/group/subgroup/..., so I build it
+
+cir$pathString <- paste("cir", cir$year, cir$sub_sc, cir$sub_sub, cir$sub_subsub, sep = "/")
+kg_co2e <- as.Node(cir)
+
+# Make the plot
+#circlepackeR(population, size = "value")
+
+# You can custom the minimum and maximum value of the color range
+
+```
+
 
 
