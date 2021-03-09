@@ -30,6 +30,13 @@ scope3 <- total_emissions %>%
     filter(scope == "SCOPE 3") %>% 
     mutate(year = as.character(year))
 
+food_waste <- total_emissions %>% 
+    filter(scope == "OFFSETS") %>% 
+    mutate(year = as.character(year))
+
+food_waste_pos <- food_waste %>% 
+    mutate_if(is.numeric, funs(. * -1))
+
 # Define UI for application that draws a histogram
 ui <- fluidPage (theme = nada_theme,
                 # Application title
@@ -82,17 +89,22 @@ ui <- fluidPage (theme = nada_theme,
                                     ),
                            tabPanel("Food Waste Diversion",
                                     sidebarLayout(
-                                        mainPanel("Food Waste description",
-                                                  plotOutput("food_waste"
-                                                  )
-                                        ),
+                    
                                         sidebarPanel("Explaning this part of the tool",
                                     checkboxGroupInput(
-                                        inputId = "Id050",
+                                        inputId = "food_waste_sub_group",
                                         label = "Select Waste", 
-                                        choices = c("Compost", "Café")
+                                        choices = c("Compost", "Café"
+                                                    )
+                                    )),
+                                    
+                                    mainPanel(
+                                        "Food Waste description",
+                                        plotOutput("food_waste_plot")
                                     )
-                                    ))),
+                                    )
+                                    ),
+                           
                            tabPanel("2019 vs. 2020",
                                     sidebarLayout(
                                         mainPanel("Graph description",
@@ -140,6 +152,22 @@ server <- function(input, output) {
         # draw the histogram with the specified number of bins
         hist(x, breaks = bins, col = 'darkgray', border = 'white')
     })
+    
+    # graph for "food waste" tab:
+    
+    # reactive data frame
+    food_waste_reactive <- reactive({
+        food_waste %>% 
+            filter(category %in% input$food_waste_sub_group)
+    })
+    
+    # output plot 
+    output$food_waste_plot <- renderPlot({
+        ggplot(data = food_waste_reactive(), aes(x = year, y = kg_co2e, fill = sub_group)) +
+            geom_col() +
+            theme_minimal()
+    })
+    
 
 # graph for "scope 3 emissions" tab:
     

@@ -148,3 +148,14 @@ kg_co2e <- as.Node(cir)
 
 
 
+```{r}
+
+food_waste <- total_emissions %>% 
+    filter(scope == "OFFSETS") %>% 
+    mutate(year = as.character(year))
+
+food_waste_pos <- food_waste %>% 
+  mutate_if(is.numeric, funs(. * -1))
+
+```
+
