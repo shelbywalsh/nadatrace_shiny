@@ -13,10 +13,10 @@ nada_theme <- bs_theme(
     base_font = font_google("Oswald"))
 
 # Load data
-all_emissions_19 <- read_csv(here("Nadatrace","2019_all_emissions.csv")) %>% 
+total_emissions_19 <- read_csv(here("Nadatrace","2019_all_emissions.csv")) %>% 
     clean_names()
 
-all_emissions_20 <- read_csv(here("Nadatrace","2020_all_emissions.csv")) %>% 
+total_emissions_20 <- read_csv(here("Nadatrace","2020_all_emissions.csv")) %>% 
     clean_names()
 
 total_emissions <- read_csv(here("Nadatrace","allemissions.csv")) %>% 
@@ -79,14 +79,14 @@ ui <- fluidPage (theme = nada_theme,
                            tabPanel("2019 vs. 2020",
                                     sidebarLayout(
                                         mainPanel("Graph description",
-                                                  plotOutput("all_plot_19"
+                                                  plotOutput("tot_em_plot"
                                                              )
                                         ),
                                         sidebarPanel("Explaning this part of the tool",
                                                      radioButtons(
                                                          inputId = "footprint_scope",
                                                          label = "Choose Scope to compare carbon footprint:",
-                                                         choices = c("Scope 1", "Scope 2", "Scope 3"))
+                                                         choices = c("SCOPE 1", "SCOPE 2", "SCOPE 3"))
                                                      )
                                         )
                                         
@@ -122,18 +122,33 @@ server <- function(input, output) {
         # draw the histogram with the specified number of bins
         hist(x, breaks = bins, col = 'darkgray', border = 'white')
     })
-    
-    all_em19_reactive <- reactive({
-        all_emissions_19 %>% 
-            filter(scope %in% input$footprint_scope)
+
+# graph for "2019 vs 2020" tab:    
+    tot_em_reactive <- reactive({
+        total_emissions %>% 
+            filter(!scope == "OFFSETS") %>% 
+            filter(scope == input$footprint_scope)
     })
     
-    output$all_plot_19 <- renderPlot({
-        ggplot(data = all_em19_reactive(), aes(x = scope, y = kg_co2e)) +
-            geom_col(aes(color = sub_group))
+    output$tot_em_plot <- renderPlot({
+        ggplot(data = tot_em_reactive(), aes(x = year, y = kg_co2e)) +
+            geom_col(aes(fill = category))
     })
     
-    total_emission_reactive <- reactive({
+    tot_em19_reactive <- reactive({
+        total_emissions_19 %>% 
+            filter(!scope == "OFFSETS") %>% 
+            filter(scope == input$footprint_scope)
+    })
+    
+    output$tot_em19_plot <- renderPlot({
+        ggplot(data = tot_em19_reactive(), aes(x = year, y = kg_co2e)) +
+            geom_col(aes(fill = category))
+    })
+    
+    
+ # graph for "Compare Footprints" tab
+       total_emission_reactive <- reactive({
         total_emissions %>% 
             filter(year %in% input$year_emissions)
     })
