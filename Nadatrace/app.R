@@ -60,7 +60,7 @@ ui <- fluidPage (theme = nada_theme,
                                                 
                                         ),
                                         
-                                        mainPanel()
+                                        mainPanel( )
                                     )
                                     ),
                            tabPanel("Food Waste Diversion",
