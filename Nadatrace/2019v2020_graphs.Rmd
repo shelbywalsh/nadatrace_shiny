@@ -1,0 +1,41 @@
+---
+title: "2019 vs. 2020 graphs"
+author: "Ruihieng Jin"
+date: "2021/3/9"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+library(tidyverse)
+library(here)
+library(janitor)
+```
+
+```{r}
+all <- read_csv(here("Nadatrace", "allemissions.csv")) %>% 
+  clean_names() 
+
+cf <- all %>% 
+  filter(!scope == "OFFSETS")
+```
+
+```{r}
+ggplot(data = cf) +
+  geom_col(aes(x = year, y = kg_co2e, fill = category))
+```
+
+```{r}
+test_df <- all %>% 
+            filter(!scope == "OFFSETS") %>% 
+            filter(scope == "SCOPE 3")
+
+# test graph
+ggplot(data = test_df) +
+  geom_col(aes(x = year, y = kg_co2e, fill = category)) 
+```
+
