@@ -217,7 +217,7 @@ server <- function(input, output) {
     
     
     
-# graph for "Compare Footprints" tab
+    # graph for "Compare Footprints" tab
        total_emission_reactive <- reactive({
         total_emissions %>% 
             filter(year %in% input$year_emissions)

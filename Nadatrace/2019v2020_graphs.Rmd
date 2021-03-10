@@ -14,6 +14,8 @@ knitr::opts_chunk$set(
 library(tidyverse)
 library(here)
 library(janitor)
+library(ggpubr)
+theme_set(theme_pubr())
 ```
 
 ```{r}
@@ -26,6 +28,20 @@ cf <- all %>%
 scope3 <- all %>% 
   filter(scope == "SCOPE 3") %>% 
   mutate(year = as.character(year))
+
+#scope3_trans_detailed_19 <- read_csv(here("Nadatrace", "detailed_upstream_transport_emissions_2019.csv")) %>% 
+ # mutate(year = "2019") %>% 
+  #select(vendor, kgCO2e_vendor, year)
+
+#scope3_trans_detailed_20 <- read_csv(here("Nadatrace", "upstream_transport2020.csv")) %>% 
+ # mutate(year = "2020") %>% 
+  #select(vendor, kgCO2e_vendor, year)
+
+#scope3_trans_detailed <- full_join(scope3_trans_detailed_19, scope3_trans_detailed_20, by = c("vendor", "kgCO2e_vendor", "year")) 
+
+#scope3_trans_detailed= scope3_trans_detailed %>% 
+ # mutate(kg_co2e = kgCO2e_vendor) %>% 
+  #select(-kgCO2e_vendor)
 ```
 
 ```{r}
@@ -61,5 +77,119 @@ ggplot(data = scope3_trans, aes(x = year, y = kg_co2e, fill = sub_group)) +
 ggplot(data = scope3_pgs, aes(x = year, y = kg_co2e, fill = sub_group)) +
   geom_col() +
   theme_minimal()
+```
+
+```{r}
+
+scope3_pgs_wide <- scope3_pgs %>% 
+  spread(year, kg_co2e) %>% 
+  select(-scope, -category)
+
+sub_grp <- scope3_pgs_wide$sub_group
+
+scope3_pgs19 <- as.character(scope3_pgs_wide$"2019")
+scope3_pgs20 <- as.character(scope3_pgs_wide$"2020")
+
+
+balloondata <- data.frame(sub_grp, scope3_pgs19, scope3_pgs20)
+
+#ggballoonplot(balloondata)
+
+
+```
+
+```{r}
+# try geom_tile
+
+ggplot(data = scope3_trans_detailed, aes(x = year, y = vendor)) +
+  geom_tile(aes(fill = kg_co2e))
+```
+
+----------------------------------------------------------------------
+
+```{r}
+### Trying radar chart --- sample data format
+# Library
+library(fmsb)
+ 
+# Create data: note in High school for Jonathan:
+data <- as.data.frame(matrix( sample( 2:20 , 10 , replace=T) , ncol=10))
+colnames(data) <- c("math" , "english" , "biology" , "music" , "R-coding", "data-viz" , "french" , "physic", "statistic", "sport" )
+ 
+# To use the fmsb package, I have to add 2 lines to the dataframe: the max and min of each topic to show on the plot!
+data <- rbind(rep(20,10) , rep(0,10) , data)
+ 
+```
+
+```{r}
+scope3_pgs_wide2 <- scope3_pgs %>% 
+  spread(sub_group, kg_co2e) %>% 
+  filter(year == "2019") %>% ## figure out how to do both year later
+  select(-year, -scope, -category) %>% 
+  clean_names()
+
+scope3_pgs_wide2 <- rbind(rep(100000, 6), rep(0, 6), scope3_pgs_wide2)
+
+radarchart(scope3_pgs_wide2)
+
+```
+```{r}
+# sample data format for multiple years
+
+# Create data: note in High school for several students
+set.seed(99)
+data <- as.data.frame(matrix( sample( 0:20 , 15 , replace=F) , ncol=5))
+colnames(data) <- c("math" , "english" , "biology" , "music" , "R-coding" )
+rownames(data) <- paste("mister" , letters[1:3] , sep="-")
+ 
+# To use the fmsb package, I have to add 2 lines to the dataframe: the max and min of each variable to show on the plot!
+data <- rbind(rep(20,5) , rep(0,5) , data)
+ 
+# plot with default options:
+radarchart(data)
+
+
+
+# Color vector
+colors_border=c( rgb(0.2,0.5,0.5,0.9), rgb(0.8,0.2,0.5,0.9) , rgb(0.7,0.5,0.1,0.9) )
+colors_in=c( rgb(0.2,0.5,0.5,0.4), rgb(0.8,0.2,0.5,0.4) , rgb(0.7,0.5,0.1,0.4) )
+
+# plot with default options:
+radarchart( data  , axistype=1 , 
+    #custom polygon
+    pcol=colors_border , pfcol=colors_in , plwd=4 , plty=1,
+    #custom the grid
+    cglcol="grey", cglty=1, axislabcol="grey", caxislabels=seq(0,20,5), cglwd=0.8,
+    #custom labels
+    vlcex=0.8 
+    )
+
+# Add a legend
+legend(x=0.7, y=1.2, legend = rownames(data[-c(1,2),]), bty = "n", pch=20 , col=colors_in , text.col = "grey", cex=1.2, pt.cex=3)
+```
+
+```{r}
+scope3_pgs_wide3 <- scope3_pgs %>% 
+  spread(sub_group, kg_co2e) %>%  
+  select(-year, -scope, -category) %>% 
+  clean_names() 
+
+rownames(scope3_pgs_wide3) <- c("2019", "2020")
+
+scope3_pgs_wide3 <- rbind(rep(100000, 6), rep(0, 6), scope3_pgs_wide3)
+
+colors_border=c( rgb(0.2,0.5,0.5,0.9), rgb(0.8,0.2,0.5,0.9) , rgb(0.7,0.5,0.1,0.9) )
+colors_in=c( rgb(1, 0.6, 0.5, 0.2), rgb(0.8,0.2,0.5,0.4) )
+
+radarchart(scope3_pgs_wide3, axistype=1 , 
+    #custom polygon
+    pcol=colors_border , pfcol=colors_in , plwd=4 , plty=1,
+    #custom the grid
+    cglcol="grey", cglty=1, axislabcol="grey", caxislabels=seq(0,100000,25000), cglwd=0.8,
+    #custom labels
+    vlcex=0.8 
+    )
+
+legend(x=0.7, y=1, legend = c("2019", "2020"), bty = "n", pch=20 , col=colors_in , text.col = "grey", cex=1, pt.cex=4)
 ```
 
