@@ -200,6 +200,20 @@ server <- function(input, output) {
             theme_minimal()
     })
     
+    
+    # graph for "Purchased goods and services" tab
+    
+    puch_reactive <- reactive({
+        puch %>% 
+            filter(year %in% input$pick_year,
+                   category %in% input$prod_cat)
+    })
+    
+    output$tpuch_plot <- renderPlot({
+        ggplot(data = puch_reactive(), aes(x = prod_cat, y = kg_co2e)) +
+            geom_col(aes(color = sub_group))
+    })
+    
     # graph for "food waste" tab:
     
     # reactive data frame
@@ -215,18 +229,6 @@ server <- function(input, output) {
             theme_minimal()
     })
     
-    
-    
-    # graph for "Compare Footprints" tab
-       total_emission_reactive <- reactive({
-        total_emissions %>% 
-            filter(year %in% input$year_emissions)
-    })
-    
-    output$total_emissions <- renderPlot({
-        ggplot(data = total_emissions(), aes(x = scope, y = kg_co2e)) +
-            geom_col(aes(color = sub_group))
-    })
 }
 
 shinyApp(ui = ui, server = server)
