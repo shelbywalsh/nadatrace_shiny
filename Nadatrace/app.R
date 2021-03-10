@@ -26,6 +26,9 @@ cf <- total_emissions %>%
     filter(!scope == "OFFSETS") %>% 
     mutate(year = as.character(year))
 
+pur_20 <- read_csv(here("Nadatrace", "purchased_goods_2020.csv")) %>% 
+    clean_names()
+
 scope3 <- total_emissions %>% 
     filter(scope == "SCOPE 3") %>% 
     mutate(year = as.character(year))
@@ -40,7 +43,7 @@ food_waste_pos <- food_waste %>%
 # Define UI for application that draws a histogram
 ui <- fluidPage (theme = nada_theme,
                 # Application title
-                navbarPage(h2("NADAtrace Carbon Footprint Visualization Tool"),
+                navbarPage(h2("NADAtrace Carbon Footprint Market Tool"),
                            
                            tabPanel("About Nada and the Tool",
                                     
