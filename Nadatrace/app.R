@@ -34,7 +34,8 @@ pur_20 <- read_csv(here("Nadatrace", "purchased_goods_20.csv")) %>%
     clean_names()%>% 
     mutate(year = "2020")
 
-puch <- rbind(pur_19, pur_20)
+puch <- rbind(pur_19, pur_20) %>% 
+    mutate(year = as.character(year))
 
 scope3 <- total_emissions %>% 
     filter(scope == "SCOPE 3") %>% 
@@ -205,13 +206,14 @@ server <- function(input, output) {
     
     puch_reactive <- reactive({
         puch %>% 
-            filter(year %in% input$pick_year,
-                   category %in% input$prod_cat)
+            filter( year == input$pick_year &
+                   prod_cat == input$pick_prod_cat)
     })
     
-    output$tpuch_plot <- renderPlot({
-        ggplot(data = puch_reactive(), aes(x = prod_cat, y = kg_co2e)) +
-            geom_col(aes(color = sub_group))
+    output$puch_plot <- renderPlot({
+        ggplot(data = puch_reactive(), aes(x = prod_cat, y = total_kg_co2e)) +
+            geom_col() + 
+            theme_minimal()
     })
     
     # graph for "food waste" tab:

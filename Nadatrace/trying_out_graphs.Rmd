@@ -157,5 +157,7 @@ food_waste <- total_emissions %>%
 food_waste_pos <- food_waste %>% 
   mutate_if(is.numeric, funs(. * -1))
 
+
+
 ```
 
