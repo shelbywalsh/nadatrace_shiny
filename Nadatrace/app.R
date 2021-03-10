@@ -127,6 +127,10 @@ ui <- fluidPage (theme = nada_theme,
                                     sidebarLayout(
                                    
                                             sidebarPanel("Explaning this part of the tool",
+                                                    selectInput(
+                                                        inputId = "pick_year",
+                                                            label = "Select Year:",
+                                                             choices = c("2019", "2020")),
                                                 selectInput(
                                                     inputId = "pick_prod_cat",
               label = "Pick Product Category:",
