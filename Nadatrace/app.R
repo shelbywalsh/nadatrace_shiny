@@ -43,7 +43,7 @@ food_waste_pos <- food_waste %>%
 # Define UI for application that draws a histogram
 ui <- fluidPage (theme = nada_theme,
                 # Application title
-                navbarPage(h2("NADAtrace Carbon Footprint Market Tool"),
+                navbarPage(h2("NADAtrace Carbon Footprint Visualization Tool"),
                            
                            tabPanel("About Nada and the Tool",
                                     
