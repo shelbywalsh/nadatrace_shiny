@@ -46,14 +46,19 @@ ui <- fluidPage (theme = nada_theme,
                 # Application title
                 navbarPage(h2("NADAtrace Carbon Footprint Visualization Tool"),
                            
-                           tabPanel("About Nada and the Carbon Footpring Tool",
+                           navbarMenu("Background",
+                           
+                           tabPanel("About Nada",
                                     
                                     mainPanel(
                                         
-                                        h3("Background (information about Nada, and the motivation behind measuring their carbon footprint.)"),
+                                        h3("Nada is a package-free grocery store on a mission"),
                                         
-                                        h5("Nada is a Canadian grocery store that offers sustainably sourced foods, zero waste lifestyle products, and a package-free shopping experience. The business is also committed to environmental and social justice. One of the ways Nada is working to further reduce its environmental impacts is quantifying the carbon footprint of its business model"),
+                                        h5("Nada is a grocery store in Vancouver, BC that offers sustainably sourced foods, zero waste lifestyle products, and a package-free shopping experience. The business is also committed to environmental and social justice. One of the ways Nada is working to further reduce its environmental impacts is quantifying the carbon footprint of its business model"))),
+
                                         
+                            tabPanel("About this tool",
+                                     mainPanel(
                                         h3("About the Tool"),
                                         
                                         h5("This set of tools allows the user to visually explore the carbon footprint of Nada from 2019 and 2020. 4 interactive data visualization tools are included in the subsequent tabs:"),
@@ -70,7 +75,7 @@ ui <- fluidPage (theme = nada_theme,
                                         
                                     )
                                         
-                                    ),
+                                    )),
                            tabPanel("2019 vs. 2020",
                                     sidebarLayout(
                                         mainPanel("Graph description",
