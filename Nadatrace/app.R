@@ -60,6 +60,8 @@ ui <- fluidPage (theme = nada_theme,
                                         
                                         h3("Nada is a package-free grocery store on a mission"),
                                         
+                                        img(src = "nada1.jpg", height = 251, width = 444),
+                                        
                                         h5("Nada is a grocery store in Vancouver, BC that offers sustainably sourced foods, zero waste lifestyle products, and a package-free shopping experience. The business is also committed to environmental and social justice. One of the ways Nada is working to further reduce its environmental impacts is quantifying the carbon footprint of its business model"))),
 
                                         
