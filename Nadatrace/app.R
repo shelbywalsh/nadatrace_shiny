@@ -20,15 +20,21 @@ total_emissions_20 <- read_csv(here("Nadatrace","2020_all_emissions.csv")) %>%
     clean_names()
 
 total_emissions <- read_csv(here("Nadatrace","allemissions.csv")) %>% 
-    clean_names() %>% 
-    mutate(year = "2020")
+    clean_names() 
 
 cf <- total_emissions %>% 
     filter(!scope == "OFFSETS") %>% 
     mutate(year = as.character(year))
 
-pur_20 <- read_csv(here("Nadatrace", "purchased_goods_2020.csv")) %>% 
-    clean_names()
+pur_19 <- read_csv(here("Nadatrace", "purchased_goods_19.csv")) %>% 
+    clean_names()%>% 
+    mutate(year = "2019")
+
+pur_20 <- read_csv(here("Nadatrace", "purchased_goods_20.csv")) %>% 
+    clean_names()%>% 
+    mutate(year = "2020")
+
+puch <- rbind(pur_19, pur_20)
 
 scope3 <- total_emissions %>% 
     filter(scope == "SCOPE 3") %>% 
