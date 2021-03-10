@@ -45,7 +45,7 @@ ui <- fluidPage (theme = nada_theme,
                 # Application title
                 navbarPage(h2("NADAtrace Carbon Footprint Visualization Tool"),
                            
-                           tabPanel("About Nada and the Tool",
+                           tabPanel("About Nada and the Carbon Footpring Tool",
                                     
                                     mainPanel(
                                         
