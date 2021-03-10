@@ -20,7 +20,8 @@ total_emissions_20 <- read_csv(here("Nadatrace","2020_all_emissions.csv")) %>%
     clean_names()
 
 total_emissions <- read_csv(here("Nadatrace","allemissions.csv")) %>% 
-    clean_names()
+    clean_names() %>% 
+    mutate(year = "2020")
 
 cf <- total_emissions %>% 
     filter(!scope == "OFFSETS") %>% 
