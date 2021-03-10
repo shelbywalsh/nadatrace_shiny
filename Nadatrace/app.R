@@ -115,11 +115,25 @@ ui <- fluidPage (theme = nada_theme,
                                     )
                                     ),
                            
-                           tabPanel("Purchased Goods and Services"  # Tab names need work 
-                                    
+                           tabPanel(
+                               "Purchased Goods and Services",  # Tab names need work 
+                                    sidebarLayout(
+                                   
+                                            sidebarPanel("Explaning this part of the tool",
+                                                selectInput(
+                                                    inputId = "pick_prod_cat",
+              label = "Pick Product Category:",
+              choices = c("Poultry & Eggs"= "eggs", "Cheese" = "cheese", "Meat" = "meat", "Fabrics" = "fabric","Flours" = "flours", "Bread & Bakery" = "bread", "Cookies, Crackers,Pastas & Tortillas" = "cookies", "Sugars" = "sugar", "Coffee & Tea" = "coffee", "Cheese" = "cheese", "Cheese" = "cheese", "Cheese" = "cheese", "Cheese" = "cheese", "Cheese" = "cheese", "Cheese" = "cheese"), selected = "Vegetable & Melon Farming")),
+                                   
+                                   mainPanel(
+                                       "Food Waste description",
+                                       plotOutput("food_waste_plot")
+                                   )
+                               )
                            ), 
                            
-                           tabPanel("Food Waste Diversion",
+                           tabPanel(
+                               "Food Waste Diversion",
                                     sidebarLayout(
                     
                                         sidebarPanel("Explaning this part of the tool",
