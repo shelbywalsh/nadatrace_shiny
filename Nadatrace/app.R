@@ -67,6 +67,23 @@ ui <- fluidPage (theme = nada_theme,
                                     )
                                         
                                     ),
+                           tabPanel("2019 vs. 2020",
+                                    sidebarLayout(
+                                        mainPanel("Graph description",
+                                                  plotOutput("tot_em_plot"
+                                                  )
+                                        ),
+                                        sidebarPanel(
+                                            "Explaning this part of the tool",
+                                            checkboxGroupInput(
+                                                inputId = "footprint_scope",
+                                                label = "Choose Scope to compare carbon footprint:",
+                                                choices = c("SCOPE 1", "SCOPE 2", "SCOPE 3"))
+                                        )
+                                    )
+                                    
+                           ),
+                           
                            tabPanel(
                                "Scope 3 Emissions",
                                     
@@ -87,6 +104,11 @@ ui <- fluidPage (theme = nada_theme,
                                     )
                                     )
                                     ),
+                           
+                           tabPanel("Purchased Goods and Services"  # Tab names need work 
+                                    
+                           ), 
+                           
                            tabPanel("Food Waste Diversion",
                                     sidebarLayout(
                     
@@ -103,40 +125,9 @@ ui <- fluidPage (theme = nada_theme,
                                         plotOutput("food_waste_plot")
                                     )
                                     )
-                                    ),
+                                    )
+                        
                            
-                           tabPanel("2019 vs. 2020",
-                                    sidebarLayout(
-                                        mainPanel("Graph description",
-                                                  plotOutput("tot_em_plot"
-                                                             )
-                                        ),
-                                        sidebarPanel(
-                                            "Explaning this part of the tool",
-                                            checkboxGroupInput(
-                                                inputId = "footprint_scope",
-                                                label = "Choose Scope to compare carbon footprint:",
-                                                choices = c("SCOPE 1", "SCOPE 2", "SCOPE 3"))
-                                                     )
-                                        )
-                                        
-                                    ),
-                           tabPanel("Compare Footprints",
-                                    sidebarLayout(
-                                        mainPanel("Graph description",
-                                                  plotOutput("total_emission"
-                                                             )
-                                                  ),
-                                        sidebarPanel("Select a Year to view Nada Grocery's emissions",
-                                                     radioButtons(
-                                                         inputId = "year_emissions",
-                                                         label = "Select Year:",
-                                                         choices = c("2019", "2020")
-                                                     ))
-                                    )),
-                           tabPanel("Emissions Sources"  # Tab names need work 
-                                    
-                                    )  
                            ))
                 
 
