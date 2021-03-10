@@ -137,8 +137,8 @@ ui <- fluidPage (theme = nada_theme,
               choices = c("Poultry & Eggs"= "eggs", "Cheese" = "cheese", "Meat" = "meat", "Fabrics" = "fabric","Flours" = "flours", "Bread & Bakery" = "bread", "Cookies, Crackers,Pastas & Tortillas" = "cookies", "Sugars" = "sugar", "Coffee & Tea" = "coffee", "Pickling & Canning" = "dried", "Ice Cream" = "ice cream", "Frozen Food" = "frozen", "Scrap" = "scrap", "Condensed Dairy Products" = "dairy", "Milk" = "dairy","Soybean Processing" = "oilseed", "Oilseed Farming" = "oilseed","Snack Food" = "snack","Grain Farming" = "grain", "Fish" = "fish", "Seasonings & Dressings" = "seasoning","Breweries" = "brewery", "Florals" = "floral", "Cleaning Supplies" = "cleaning", "Toiletries" = "beauty", "Fruit & Tree Nut Farming" = "fruit", "Vegetable & Melon Farming" = "vegetable", "Apparel" = "apparel", "Glass" = "glass", "Cutlery" = "cutlery", "Paper" = "paper", "Metal" = "metal", "Fibers & Yarn" = "thread", "Honey" = "honey","Other (Food)" = "other food", "Other (Non Food)" = "other all"), selected = "Vegetable & Melon Farming")),
                                    
                                    mainPanel(
-                                       "Food Waste description",
-                                       plotOutput("food_waste_plot")
+                                       "Purchased Goods & Services Description",
+                                       plotOutput("puch_plot")
                                    )
                                )
                            ), 
@@ -149,7 +149,7 @@ ui <- fluidPage (theme = nada_theme,
                     
                                         sidebarPanel("Explaning this part of the tool",
                                     checkboxGroupInput(
-                                        inputId = "food_waste_sub_group",
+                                        inputId = "food_waste_group",
                                         label = "Select Waste", 
                                         choices = c("Compost", "Café"
                                                     )
@@ -170,32 +170,22 @@ ui <- fluidPage (theme = nada_theme,
 # Define server logic required to draw a histogram
 server <- function(input, output) {
     
-    output$distPlot <- renderPlot({
-        # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
-        
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white')
-    })
-    
-    # graph for "food waste" tab:
+    # graph for "2019 vs 2020" tab:    
     
     # reactive data frame
-    food_waste_reactive <- reactive({
-        food_waste %>% 
-            filter(category %in% input$food_waste_sub_group)
+    tot_em_reactive <- reactive({
+        cf %>% 
+            filter(scope %in% input$footprint_scope)
     })
     
-    # output plot 
-    output$food_waste_plot <- renderPlot({
-        ggplot(data = food_waste_reactive(), aes(x = year, y = kg_co2e, fill = sub_group)) +
-            geom_col() +
+    # output plot #1
+    output$tot_em_plot <- renderPlot({
+        ggplot(data = tot_em_reactive(), aes(x = year, y = kg_co2e)) +
+            geom_col(aes(fill = category)) +
             theme_minimal()
     })
     
-
-# graph for "scope 3 emissions" tab:
+    # graph for "scope 3 emissions" tab:
     
     # reactive data frame
     scope3_reactive <- reactive({
@@ -210,20 +200,22 @@ server <- function(input, output) {
             theme_minimal()
     })
     
-# graph for "2019 vs 2020" tab:    
+    # graph for "food waste" tab:
     
     # reactive data frame
-    tot_em_reactive <- reactive({
-        cf %>% 
-            filter(scope %in% input$footprint_scope)
+    food_waste_reactive <- reactive({
+        food_waste_pos %>% 
+            filter(category %in% input$food_waste_group)
     })
-
-    # output plot #1
-    output$tot_em_plot <- renderPlot({
-        ggplot(data = tot_em_reactive(), aes(x = year, y = kg_co2e)) +
-            geom_col(aes(fill = category)) +
+    
+    # output plot 
+    output$food_waste_plot <- renderPlot({
+        ggplot(data = food_waste_reactive(), aes(x = year, y = kg_co2e, fill = sub_group)) +
+            geom_col() +
             theme_minimal()
     })
+    
+    
     
 # graph for "Compare Footprints" tab
        total_emission_reactive <- reactive({
