@@ -276,7 +276,9 @@ server <- function(input, output) {
     
     output$puch_plot <- renderPlot({
         ggplot(data = puch_reactive(), aes(x = total_kg_co2e, y = total_kg_co2e)) +
-            geom_col(aes(fill = prod_cat)) + 
+            ylim(0,80000) + 
+            geom_col(aes(fill = prod_cat)) +
+            geom_point(aes(text = total_kg_co2e)) +
             theme_void() +
             theme(legend.position="none") +
             labs(x = "") +
