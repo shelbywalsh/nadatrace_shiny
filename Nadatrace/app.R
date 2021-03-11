@@ -85,7 +85,7 @@ ui <- fluidPage (theme = nada_theme,
                                         
                             tabPanel("How to Use this Tool",
                                      mainPanel(
-                                        h3("About the Tool"),
+                                        h3("Using this tool to visualize the carbon footprint of Nada's"),
                                         
                                         h5("This set of tools allows the user to visually explore the carbon footprint of Nada from 2019 and 2020. 4 interactive data visualization tools are included in the subsequent tabs:"),
                                         
