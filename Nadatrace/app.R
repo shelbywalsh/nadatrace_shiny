@@ -11,7 +11,7 @@ library(igraph)
 library(viridis)
 library(packcircles)
 library(data.tree)
-library(circlepackeR)
+
 
 nada_theme <- bs_theme(
     bg = "#ff6666",
@@ -77,10 +77,12 @@ ui <- fluidPage (theme = nada_theme,
                                         
                                         img(src = "nada1.jpg", height = 251, width = 444),
                                         
-                                        h5("Nada is a grocery store in Vancouver, BC that offers sustainably sourced foods, zero waste lifestyle products, and a package-free shopping experience. The business is also committed to environmental and social justice. One of the ways Nada is working to further reduce its environmental impacts is quantifying the carbon footprint of its business model"))),
+                                        h5("Nada is a grocery store in Vancouver, BC that offers sustainably sourced foods, zero waste lifestyle products, and a package-free shopping experience. The owners also have a committment to environmental and social justice and are constantly looking at ways to reduce their carbon footprint. What sets Nada apart is their drive to not only understand the carbon footprint from their own business operations, but also the footprints of all the suppliers and transportators that are involved up and down their supply chain. Woah!"),
+                                        
+                                        h5("By taking this vertically integrated approach to analyzing and understanding the carbon footprint at each point along their supply chain, Nada hopes to set a bold new example for grocers by encouraging locally sourced products and rewarding suppliers who take environmental action seriously. This application will help that goal by providing a quick and easy way to see which areas along Nada's supply chain (including their own operations) are the larger emitters and thus target them for CO2 emission reduction. See more in How to Use This Tool"))),
 
                                         
-                            tabPanel("About this tool",
+                            tabPanel("How to Use this Tool",
                                      mainPanel(
                                         h3("About the Tool"),
                                         
