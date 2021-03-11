@@ -5,6 +5,13 @@ library(shinythemes)
 library(bslib)
 library(janitor)
 library(here)
+library(ggraph)
+library(ggiraph)
+library(igraph)
+library(viridis)
+library(packcircles)
+library(data.tree)
+library(circlepackeR)
 
 nada_theme <- bs_theme(
     bg = "#ff6666",
@@ -34,8 +41,15 @@ pur_20 <- read_csv(here("Nadatrace", "purchased_goods_20.csv")) %>%
     clean_names()%>% 
     mutate(year = "2020")
 
+
 puch <- rbind(pur_19, pur_20) %>% 
     mutate(year = as.character(year))
+
+packing_pun <- circleProgressiveLayout(puch$total_kg_co2e, sizetype='area')
+
+puch_data <- cbind(puch, packing_pun)
+
+puch_gg <- circleLayoutVertices(packing_pun, npoints=50)
 
 scope3 <- total_emissions %>% 
     filter(scope == "SCOPE 3") %>% 
@@ -128,14 +142,18 @@ ui <- fluidPage (theme = nada_theme,
                                     sidebarLayout(
                                    
                                             sidebarPanel("Explaning this part of the tool",
-                                                    selectInput(
-                                                        inputId = "pick_year",
-                                                            label = "Select Year:",
-                                                             choices = c("2019", "2020")),
+                                                    radioButtons(inputId = "pick_year",
+                                                                      label = "Select Year:",
+                                                                      choices = c("2019","2020"), 
+                                                         ),
+                                                    #selectInput(
+                                                        #inputId = "pick_year",
+                                                            #label = "Select Year:",
+                                                             #choices = c("2019", "2020")),
                                                 selectInput(
                                                     inputId = "pick_prod_cat",
               label = "Pick Product Category:",
-              choices = c("Poultry & Eggs"= "eggs", "Cheese" = "cheese", "Meat" = "meat", "Fabrics" = "fabric","Flours" = "flours", "Bread & Bakery" = "bread", "Cookies, Crackers,Pastas & Tortillas" = "cookies", "Sugars" = "sugar", "Coffee & Tea" = "coffee", "Pickling & Canning" = "dried", "Ice Cream" = "ice cream", "Frozen Food" = "frozen", "Scrap" = "scrap", "Condensed Dairy Products" = "dairy", "Milk" = "dairy","Soybean Processing" = "oilseed", "Oilseed Farming" = "oilseed","Snack Food" = "snack","Grain Farming" = "grain", "Fish" = "fish", "Seasonings & Dressings" = "seasoning","Breweries" = "brewery", "Florals" = "floral", "Cleaning Supplies" = "cleaning", "Toiletries" = "beauty", "Fruit & Tree Nut Farming" = "fruit", "Vegetable & Melon Farming" = "vegetable", "Apparel" = "apparel", "Glass" = "glass", "Cutlery" = "cutlery", "Paper" = "paper", "Metal" = "metal", "Fibers & Yarn" = "thread", "Honey" = "honey","Other (Food)" = "other food", "Other (Non Food)" = "other all"), selected = "Vegetable & Melon Farming")),
+              choices = c("Poultry & Eggs"= "eggs", "Cheese" = "cheese", "Meat" = "meat", "Fabrics" = "fabric","Flours" = "flours", "Bread & Bakery" = "bread", "Cookies, Crackers,  Pastas & Tortillas" = "cookie", "Sugars" = "sugar", "Coffee & Tea" = "coffee", "Pickling & Canning" = "dried", "Ice Cream" = "ice cream", "Frozen Food" = "frozen", "Scrap" = "scrap", "Condensed Dairy Products" = "dairy", "Milk" = "dairy","Soybean Processing" = "oilseed", "Oilseed Farming" = "oilseed","Snack Food" = "snack","Grain Farming" = "grain", "Fish" = "fish", "Seasonings & Dressings" = "seasoning","Breweries" = "brewery", "Florals" = "floral", "Cleaning Supplies" = "cleaning", "Toiletries" = "beauty", "Fruit & Tree Nut Farming" = "fruit", "Vegetable & Melon Farming" = "vegetable", "Apparel" = "apparel", "Glass" = "glass", "Cutlery" = "cutlery", "Paper" = "paper", "Metal" = "metal", "Fibers & Yarn" = "thread", "Honey" = "honey","Other (Food)" = "other food", "Other (Non Food)" = "other all"), selected = "Vegetable & Melon Farming")),
                                    
                                    mainPanel(
                                        "Purchased Goods & Services Description",
@@ -182,7 +200,7 @@ server <- function(input, output) {
     # output plot #1
     output$tot_em_plot <- renderPlot({
         ggplot(data = tot_em_reactive(), aes(x = year, y = kg_co2e)) +
-            geom_col(aes(fill = category)) +
+            geom_point(aes(fill = category, size = kg_co2e)) +
             theme_minimal()
     })
     
@@ -205,15 +223,16 @@ server <- function(input, output) {
     # graph for "Purchased goods and services" tab
     
     puch_reactive <- reactive({
-        puch %>% 
-            filter( year == input$pick_year &
+        puch_data %>% 
+            filter(year == input$pick_year &
                    prod_cat == input$pick_prod_cat)
     })
     
     output$puch_plot <- renderPlot({
-        ggplot(data = puch_reactive(), aes(x = prod_cat, y = total_kg_co2e)) +
-            geom_col() + 
-            theme_minimal()
+        ggplot(data = puch_reactive(), aes(x = prod_cat,y = total_kg_co2e)) +
+            geom_col(aes(fill = prod_cat)) + 
+            theme_minimal() +
+            labs(y = "Kilograms of CO2 Equivalent")
     })
     
     # graph for "food waste" tab:
@@ -230,6 +249,7 @@ server <- function(input, output) {
             geom_col() +
             theme_minimal()
     })
+    
     
 }
 
