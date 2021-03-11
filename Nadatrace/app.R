@@ -87,24 +87,26 @@ ui <- fluidPage (theme = nada_theme,
                                         
                                         img(src = "nada2.jpg", height = 251, width = 444),
                                         
-                                        h5("By taking this vertically integrated approach to analyzing and understanding the carbon footprint at each point along their supply chain, Nada hopes to set a bold new example for grocers by encouraging locally sourced products and rewarding suppliers who take environmental action seriously. This application will help that goal by providing a quick and easy way to see which areas along Nada's supply chain (including their own operations) are the larger emitters and thus target them for CO2 emission reduction."))),
+                                        h5("By taking this vertically integrated approach to analyzing and understanding the carbon footprint at each point along their supply chain, Nada hopes to set a bold new example for grocers by encouraging locally sourced products and rewarding suppliers who take environmental action seriously. This application will help that goal by providing a quick and easy way to see which areas along Nada's supply chain (including their own operations) are the larger emitters and thus target them for CO2 emission reduction. See how the footprint is broken down in Scoping and Data Sources."))),
 
                             tabPanel("Scoping and Data Sources",
                                      mainPanel(
                                          h3("What do we mean by Scopes 1, 2, and 3 and where does our data come from?"),
-                                         h5("Nada has broken down their entire carbon footprint into three categories called 'Scopes' so they can visualize where there is the most room to improve. See below for the exact breakdown, note that Scopes 1 and 2 represent different aspects of Nada's own CO2 emissions while Scope 3 captures the footprints of all suppliers and transporters who help put  food on the shelves."),
+                                         h5("Nada has broken down their entire carbon footprint into three categories called 'Scopes' so they can visualize where there is the most room to improve. See below for the exact breakdown. Note that Scopes 1 and 2 represent different aspects of Nada's own CO2 emissions while Scope 3 captures the footprints of all suppliers and transporters who help put  food on the shelves."),
                                          
                                          h5(strong("Scope 1"), "The first category of Nada's on-site emissions. Scope 1 is all of the CO2 equivalent emissions that come from leaking of refrigerants over time at the store. Data acquired about appliances were acquired from equipment spec sheets and charge capacity information was provided by the manufacturer."),
                                          
                                          h5(strong("Scope 2"), "The second grouping of Nada's on-site emissions. Scope 2 is the amount of C02 emitted due to the consumption of electricity at the store. Nada's utility bills from 2019-2020 were used to determine energy consumption and CO2 equivalent was calculated from that result."),
                                          
-                                         h5(strong("Scope 3"), "The big one. Scope 3 captures the carbon footprint generated from all operations required to put food on the shelf at the Nada store. It's further divided into Purchased Goods and Services and Transportation. PG&S is the amount of emissions expected from the suppliers in the course of producing the good that Nada will sell (ie: how much carbon is emitted to take to make the candy bar). Transportation are the emissions from getting those products to the store."),
+                                         h5(strong("Scope 3"), "The big one. Scope 3 captures the carbon footprint generated from all operations required to put food on the shelf at the Nada store. It's further divided into Purchased Goods and Services and Upstream Transportation. PG&S is the amount of emissions produced from the suppliers in the course of producing the good that Nada will sell (ie: how much carbon is emitted to take to make the candy bar). Upstream Transportation are the emissions from getting those products to the store."),
+                                         
+                                         h5("While Scopes 1 and 2 effectively capture Nada's direct carbon footprint, their committment to emissions reduction pushed them to include Scope 3 in their analysis. Because Scope 3 encapsulates the total carbon footprints of all of their suppliers as well as upstream transportation to deliver products, the user will see that in scale, it dwarfs Scopes 1 and 2. See more in How to Use this Tool."),
                                          
                                      )),
                                       
                             tabPanel("How to Use this Tool",
                                      mainPanel(
-                                        h3("Use this tool to visualize the carbon footprint of Nada's supply chain and operations"),
+                                        h3("Using this tool to visualize the carbon footprint of Nada's supply chain and operations (Scopes 1,2, and 3)"),
                                         
                                         h5("This set of tools allows the user to visually explore the carbon footprint of Nada from 2019 and 2020. 4 interactive data visualization tools are included in the subsequent tabs:"),
                                         
