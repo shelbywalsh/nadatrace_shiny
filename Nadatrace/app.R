@@ -11,6 +11,7 @@ library(igraph)
 library(viridis)
 library(packcircles)
 library(data.tree)
+library(circlepackeR)
 
 
 nada_theme <- bs_theme(
@@ -54,6 +55,12 @@ puch_gg <- circleLayoutVertices(packing_pun, npoints=50)
 scope3 <- total_emissions %>% 
     filter(scope == "SCOPE 3") %>% 
     mutate(year = as.character(year))
+
+scope3_4zoomcircle <- scope3 %>% 
+    mutate(root = "root") %>% 
+    mutate(pathString = paste("nada", year, category, sub_group, sep = "/")) 
+
+scope3_4zoomcircle <- scope3_4zoomcircle[, c(6,1,2,3,4,5,7)]
 
 food_waste <- total_emissions %>% 
     filter(scope == "OFFSETS") %>% 
@@ -126,7 +133,7 @@ ui <- fluidPage (theme = nada_theme,
                                     sidebarPanel(
                                         "Explaining this part of the tool",
                                         checkboxGroupInput(
-                                            inputId = "scope3_subgroup",
+                                            inputId = "scope3_category",
                                             label = "Choose Scope 3 category to view carbon footprint:",
                                             choices = c("Transportation", "Purchased Goods & Services")
                                             )
@@ -134,7 +141,7 @@ ui <- fluidPage (theme = nada_theme,
                                         
                                     mainPanel(
                                         "Graph description",
-                                        plotOutput("scope3_plot")
+                                        circlepackeROutput("scope3_zoomcircle")
                                     )
                                     )
                                     ),
@@ -193,13 +200,11 @@ server <- function(input, output) {
     
     # graph for "2019 vs 2020" tab:    
     
-    # reactive data frame
     tot_em_reactive <- reactive({
         cf %>% 
             filter(scope %in% input$footprint_scope)
     })
     
-    # output plot #1
     output$tot_em_plot <- renderPlot({
         ggplot(data = tot_em_reactive(), aes(x = year, y = kg_co2e)) +
             geom_point(aes(fill = category, size = kg_co2e)) +
@@ -208,19 +213,38 @@ server <- function(input, output) {
     
     # graph for "scope 3 emissions" tab:
     
-    # reactive data frame
     scope3_reactive <- reactive({
         scope3 %>% 
-            filter(category %in% input$scope3_subgroup)
+            filter(category %in% input$scope3_category)
     })
     
-    # output plot 
-    output$scope3_plot <- renderPlot({
-        ggplot(data = scope3_reactive(), aes(x = year, y = kg_co2e, fill = sub_group)) +
-            geom_col() +
-            theme_minimal()
+    output$scope3_zoomcircle <- circlepackeR::renderCirclepackeR({
+        
+        data <- data.frame(
+            root=rep("root", 15),
+            group=c(rep("group A",5), rep("group B",5), rep("group C",5)), 
+            subgroup= rep(letters[1:5], each=3),
+            subsubgroup=rep(letters[1:3], 5),
+            value=sample(seq(1:15), 15)
+        )
+        data$pathString <- paste("world", data$group, data$subgroup, data$subsubgroup, sep = "/")
+        population <- as.Node(data)
+        circlepackeR(population, size = "value", color_min = "hsl(56,80%,80%)", color_max = "hsl(341,30%,40%)")
+        
     })
     
+    # graph option #2 for "Scope 3 Emissions" tab:
+    
+    output$scope3_zoomcircle <- renderCirclepackeR({
+        req(input$scope3_category)
+        
+        zoomcircle <- scope3_4zoomcircle %>% 
+            filter(category %in% input$scope3_category) 
+        
+        node <- as.Node(zoomcircle)
+        
+        circlepackeR(node, size = "kg_co2e")
+    })
     
     # graph for "Purchased goods and services" tab
     
