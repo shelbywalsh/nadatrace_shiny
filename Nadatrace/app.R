@@ -13,7 +13,6 @@ library(packcircles)
 library(data.tree)
 library(circlepackeR)
 
-
 nada_theme <- bs_theme(
     bg = "#ff6666",
     fg = "white",
@@ -90,10 +89,16 @@ ui <- fluidPage (theme = nada_theme,
                                         
                                         h5("By taking this vertically integrated approach to analyzing and understanding the carbon footprint at each point along their supply chain, Nada hopes to set a bold new example for grocers by encouraging locally sourced products and rewarding suppliers who take environmental action seriously. This application will help that goal by providing a quick and easy way to see which areas along Nada's supply chain (including their own operations) are the larger emitters and thus target them for CO2 emission reduction. See more in How to Use This Tool"))),
 
-                                        
+                            tabPanel("Scoping and Data Sources"),
+                                     mainPanel(
+                                         h3("What do we mean by Scopes 1, 2, and 3 and where does our data come from?"),
+                                         h5("Nada has broken down their entire carbon footprint into three categories called 'Scopes' so they can visualize where there is the most room to improve. See below for the exact breakdown, note that Scopes 1 and 2 represent different aspects of Nada's own CO2 emissions while Scope 3 captures the footprints of all suppliers and transporters who help put  food on the shelves."),
+                                         
+                                     ),
+                                      
                             tabPanel("How to Use this Tool",
                                      mainPanel(
-                                        h3("Using this tool to visualize the carbon footprint of Nada's"),
+                                        h3("Use this tool to visualize the carbon footprint of Nada's supply chain and operations"),
                                         
                                         h5("This set of tools allows the user to visually explore the carbon footprint of Nada from 2019 and 2020. 4 interactive data visualization tools are included in the subsequent tabs:"),
                                         
