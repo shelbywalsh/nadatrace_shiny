@@ -275,20 +275,7 @@ server <- function(input, output) {
             filter(category %in% input$scope3_category)
     })
     
-    output$scope3_zoomcircle <- circlepackeR::renderCirclepackeR({
-        
-        data <- data.frame(
-            root=rep("root", 15),
-            group=c(rep("group A",5), rep("group B",5), rep("group C",5)), 
-            subgroup= rep(letters[1:5], each=3),
-            subsubgroup=rep(letters[1:3], 5),
-            value=sample(seq(1:15), 15)
-        )
-        data$pathString <- paste("world", data$group, data$subgroup, data$subsubgroup, sep = "/")
-        population <- as.Node(data)
-        circlepackeR(population, size = "value", color_min = "hsl(56,80%,80%)", color_max = "hsl(341,30%,40%)")
-        
-    })
+   
     
     # graph option #2 for "Scope 3 Emissions" tab:
     
