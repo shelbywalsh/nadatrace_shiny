@@ -62,12 +62,12 @@ scope3_4zoomcircle <- scope3 %>%
 
 scope3_4zoomcircle <- scope3_4zoomcircle[, c(6,1,2,3,4,5,7)]
 
-food_waste <- total_emissions %>% 
-    filter(scope == "OFFSETS") %>% 
+food_waste <- total_emissions %>%
+    filter(scope == "OFFSETS") %>%
     mutate(year = as.character(year))
 
-food_waste_pos <- food_waste %>% 
-    mutate_if(is.numeric, funs(. * -1))
+
+
 
 # Define UI for application that draws a histogram
 ui <- fluidPage (theme = nada_theme,
@@ -85,6 +85,8 @@ ui <- fluidPage (theme = nada_theme,
                                         img(src = "nada1.jpg", height = 251, width = 444),
                                         
                                         h5("Nada is a grocery store in Vancouver, BC that offers sustainably sourced foods, zero waste lifestyle products, and a package-free shopping experience. The owners also have a committment to environmental and social justice and are constantly looking at ways to reduce their carbon footprint. What sets Nada apart is their drive to not only understand the carbon footprint from their own business operations, but also the footprints of all the suppliers and transportators that are involved up and down their supply chain. Woah!"),
+                                        
+                                        img(src = "nada2.jpg", height = 251, width = 444),
                                         
                                         h5("By taking this vertically integrated approach to analyzing and understanding the carbon footprint at each point along their supply chain, Nada hopes to set a bold new example for grocers by encouraging locally sourced products and rewarding suppliers who take environmental action seriously. This application will help that goal by providing a quick and easy way to see which areas along Nada's supply chain (including their own operations) are the larger emitters and thus target them for CO2 emission reduction. See more in How to Use This Tool"))),
 
@@ -153,7 +155,7 @@ ui <- fluidPage (theme = nada_theme,
                                             sidebarPanel("Explaning this part of the tool",
                                                     radioButtons(inputId = "pick_year",
                                                                       label = "Select Year:",
-                                                                      choices = c("2019","2020"), 
+                                                                      choices = c("2019","2020") 
                                                          ),
                                                     #selectInput(
                                                         #inputId = "pick_year",
@@ -207,8 +209,15 @@ server <- function(input, output) {
     
     output$tot_em_plot <- renderPlot({
         ggplot(data = tot_em_reactive(), aes(x = year, y = kg_co2e)) +
-            geom_point(aes(fill = category, size = kg_co2e)) +
-            theme_minimal()
+            geom_point(aes(colour = scope, shape = scope, size = kg_co2e)) +
+            scale_colour_brewer(palette = "RdPu") +
+            theme_minimal() +
+            scale_size_continuous(range = c(3, 10)) +
+            guides(shape=guide_legend(title=NULL),
+                   colour=guide_legend(title=NULL)) +
+            labs(x = "",
+                 y = "Kilograms CO2 Equivalent",
+                 size = "Kg CO2 Equivalent") 
     })
     
     # graph for "scope 3 emissions" tab:
@@ -255,25 +264,32 @@ server <- function(input, output) {
     })
     
     output$puch_plot <- renderPlot({
-        ggplot(data = puch_reactive(), aes(x = prod_cat,y = total_kg_co2e)) +
+        ggplot(data = puch_reactive(), aes(x = total_kg_co2e, y = total_kg_co2e)) +
             geom_col(aes(fill = prod_cat)) + 
-            theme_minimal() +
-            labs(y = "Kilograms of CO2 Equivalent")
+            theme_void() +
+            theme(legend.position="none") +
+            labs(x = "") +
+            ylab(expression(paste("Kilograms CO" [2]))) +
+            theme(axis.title.y = element_text(size = 14),
+                  axis.text.y = element_text(size = 12))
     })
     
     # graph for "food waste" tab:
     
     # reactive data frame
     food_waste_reactive <- reactive({
-        food_waste_pos %>% 
+        food_waste %>% 
             filter(category %in% input$food_waste_group)
     })
     
     # output plot 
     output$food_waste_plot <- renderPlot({
-        ggplot(data = food_waste_reactive(), aes(x = year, y = kg_co2e, fill = sub_group)) +
+        ggplot(data = food_waste_reactive(), aes(x = year, y = kg_co2e, fill = category)) +
             geom_col() +
-            theme_minimal()
+            theme_minimal()  +
+            guides(fill=guide_legend(title=NULL)) +
+            labs(x = "",
+                 y = "Kilograms CO2 Equivalent") 
     })
     
     
