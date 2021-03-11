@@ -158,6 +158,14 @@ food_waste_pos <- food_waste %>%
   mutate_if(is.numeric, funs(. * -1))
 
 
+cf %>% 
+  mutate(year = as.character(year))
+
+ggplot(data = cf, aes(x = year, y = kg_co2e)) +
+            geom_point(aes(colour = scope, size = kg_co2e)) +
+            scale_colour_discrete(c("paleviolet2", "pink", "grey")) +
+            theme_minimal()
+
 
 ```
 

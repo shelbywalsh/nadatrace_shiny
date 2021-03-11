@@ -55,12 +55,11 @@ scope3 <- total_emissions %>%
     filter(scope == "SCOPE 3") %>% 
     mutate(year = as.character(year))
 
-food_waste <- total_emissions %>% 
-    filter(scope == "OFFSETS") %>% 
-    mutate(year = as.character(year))
-
-food_waste_pos <- food_waste %>% 
+food_waste <- total_emissions %>%
+    filter(scope == "OFFSETS") %>%
+    mutate(year = as.character(year)) %>% 
     mutate_if(is.numeric, funs(. * -1))
+
 
 # Define UI for application that draws a histogram
 ui <- fluidPage (theme = nada_theme,
@@ -202,8 +201,15 @@ server <- function(input, output) {
     # output plot #1
     output$tot_em_plot <- renderPlot({
         ggplot(data = tot_em_reactive(), aes(x = year, y = kg_co2e)) +
-            geom_point(aes(fill = category, size = kg_co2e)) +
-            theme_minimal()
+            geom_point(aes(colour = scope, shape = scope, size = kg_co2e)) +
+            scale_colour_brewer(palette = "RdPu") +
+            theme_minimal() +
+            scale_size_continuous(range = c(3, 10)) +
+            guides(shape=guide_legend(title=NULL),
+                   colour=guide_legend(title=NULL)) +
+            labs(x = "",
+                 y = "Kg CO2 Equivalent",
+                 size = "Kg CO2 Equivalent")
     })
     
     # graph for "scope 3 emissions" tab:
@@ -241,7 +247,7 @@ server <- function(input, output) {
     
     # reactive data frame
     food_waste_reactive <- reactive({
-        food_waste_pos %>% 
+        food_waste %>% 
             filter(category %in% input$food_waste_group)
     })
     
