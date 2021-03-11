@@ -110,13 +110,13 @@ ui <- fluidPage (theme = nada_theme,
                                         
                                         h5("This set of tools allows the user to visually explore the carbon footprint of Nada from 2019 and 2020. 4 interactive data visualization tools are included in the subsequent tabs:"),
                                         
-                                        h5("Tab 1: Scope 3 CO2 emissions broken down by food category or supplier;"),
+                                        h5("Tab 1: Side by side comparison of total carbon footprint (Scopes 1,2,3) for the years 2019 and 2020;"),
                                         
-                                        h5("Tab 2: Magnitude of carbon offset from food waste diversion (relative to Scope 1,2 or 3);"),
+                                        h5("Tab 2: Circle plots displaying the relative emissions breakdown within Scope 3. Highest level suppliers and transporters are displayed for both years;"),
                                         
-                                        h5("Tab 3: Change in emissions between 2019 and 2020;"),
+                                        h5("Tab 3: Deep dive into emissions by PG&S for both years. Emissions from all 33 types of suppliers can be explored and compared for both 2019 and 2020;"),
                                         
-                                        h5("Tab 4: Interactive treemap (or stacked bar chart) of total carbon footprint."),
+                                        h5("Tab 4: Column graph displaying Nada's CO2 offset actions by way of composting and using sustainably sourced materials in their in store cafe."),
                                         
                                         h5("Data Source: Nada Grocery.")
                                         
