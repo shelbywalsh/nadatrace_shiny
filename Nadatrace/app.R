@@ -57,8 +57,9 @@ scope3 <- total_emissions %>%
 
 food_waste <- total_emissions %>%
     filter(scope == "OFFSETS") %>%
-    mutate(year = as.character(year)) %>% 
-    mutate_if(is.numeric, funs(. * -1))
+    mutate(year = as.character(year))
+
+
 
 
 # Define UI for application that draws a histogram
@@ -145,7 +146,7 @@ ui <- fluidPage (theme = nada_theme,
                                             sidebarPanel("Explaning this part of the tool",
                                                     radioButtons(inputId = "pick_year",
                                                                       label = "Select Year:",
-                                                                      choices = c("2019","2020"), 
+                                                                      choices = c("2019","2020") 
                                                          ),
                                                     #selectInput(
                                                         #inputId = "pick_year",
@@ -208,8 +209,8 @@ server <- function(input, output) {
             guides(shape=guide_legend(title=NULL),
                    colour=guide_legend(title=NULL)) +
             labs(x = "",
-                 y = "Kg CO2 Equivalent",
-                 size = "Kg CO2 Equivalent")
+                 y = "Kilograms CO2 Equivalent",
+                 size = "Kg CO2 Equivalent") 
     })
     
     # graph for "scope 3 emissions" tab:
@@ -237,10 +238,14 @@ server <- function(input, output) {
     })
     
     output$puch_plot <- renderPlot({
-        ggplot(data = puch_reactive(), aes(x = prod_cat,y = total_kg_co2e)) +
+        ggplot(data = puch_reactive(), aes(x = total_kg_co2e, y = total_kg_co2e)) +
             geom_col(aes(fill = prod_cat)) + 
-            theme_minimal() +
-            labs(y = "Kilograms of CO2 Equivalent")
+            theme_void() +
+            theme(legend.position="none") +
+            labs(x = "") +
+            ylab(expression(paste("Kilograms CO" [2]))) +
+            theme(axis.title.y = element_text(size = 14),
+                  axis.text.y = element_text(size = 12))
     })
     
     # graph for "food waste" tab:
@@ -253,9 +258,12 @@ server <- function(input, output) {
     
     # output plot 
     output$food_waste_plot <- renderPlot({
-        ggplot(data = food_waste_reactive(), aes(x = year, y = kg_co2e, fill = sub_group)) +
+        ggplot(data = food_waste_reactive(), aes(x = year, y = kg_co2e, fill = category)) +
             geom_col() +
-            theme_minimal()
+            theme_minimal()  +
+            guides(fill=guide_legend(title=NULL)) +
+            labs(x = "",
+                 y = "Kilograms CO2 Equivalent") 
     })
     
     
