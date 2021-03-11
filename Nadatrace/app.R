@@ -87,14 +87,16 @@ ui <- fluidPage (theme = nada_theme,
                                         
                                         img(src = "nada2.jpg", height = 251, width = 444),
                                         
-                                        h5("By taking this vertically integrated approach to analyzing and understanding the carbon footprint at each point along their supply chain, Nada hopes to set a bold new example for grocers by encouraging locally sourced products and rewarding suppliers who take environmental action seriously. This application will help that goal by providing a quick and easy way to see which areas along Nada's supply chain (including their own operations) are the larger emitters and thus target them for CO2 emission reduction. See more in How to Use This Tool"))),
+                                        h5("By taking this vertically integrated approach to analyzing and understanding the carbon footprint at each point along their supply chain, Nada hopes to set a bold new example for grocers by encouraging locally sourced products and rewarding suppliers who take environmental action seriously. This application will help that goal by providing a quick and easy way to see which areas along Nada's supply chain (including their own operations) are the larger emitters and thus target them for CO2 emission reduction."))),
 
-                            tabPanel("Scoping and Data Sources"),
+                            tabPanel("Scoping and Data Sources",
                                      mainPanel(
                                          h3("What do we mean by Scopes 1, 2, and 3 and where does our data come from?"),
                                          h5("Nada has broken down their entire carbon footprint into three categories called 'Scopes' so they can visualize where there is the most room to improve. See below for the exact breakdown, note that Scopes 1 and 2 represent different aspects of Nada's own CO2 emissions while Scope 3 captures the footprints of all suppliers and transporters who help put  food on the shelves."),
                                          
-                                     ),
+                                         h5(strong("Scope 1"), "The first category of Nada's on site emissions. Scope 1 is all of the CO2 equivalent emissions that come from leaking of refrigerants over time at the store. Data acquired about appliances were acquired from equipment spec sheets and charge capacity information was provided by the manufacturer."),
+                                         
+                                     )),
                                       
                             tabPanel("How to Use this Tool",
                                      mainPanel(
