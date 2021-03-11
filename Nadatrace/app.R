@@ -11,6 +11,7 @@ library(igraph)
 library(viridis)
 library(packcircles)
 library(data.tree)
+library(circlepackeR)
 
 
 nada_theme <- bs_theme(
@@ -55,10 +56,17 @@ scope3 <- total_emissions %>%
     filter(scope == "SCOPE 3") %>% 
     mutate(year = as.character(year))
 
+scope3_4zoomcircle <- scope3 %>% 
+    mutate(root = "root") %>% 
+    mutate(pathString = paste("nada", year, category, sub_group, sep = "/")) 
+
+scope3_4zoomcircle <- scope3_4zoomcircle[, c(6,1,2,3,4,5,7)]
+
 food_waste <- total_emissions %>%
     filter(scope == "OFFSETS") %>%
-    mutate(year = as.character(year)) %>% 
-    mutate_if(is.numeric, funs(. * -1))
+    mutate(year = as.character(year))
+
+
 
 
 # Define UI for application that draws a histogram
@@ -127,7 +135,7 @@ ui <- fluidPage (theme = nada_theme,
                                     sidebarPanel(
                                         "Explaining this part of the tool",
                                         checkboxGroupInput(
-                                            inputId = "scope3_subgroup",
+                                            inputId = "scope3_category",
                                             label = "Choose Scope 3 category to view carbon footprint:",
                                             choices = c("Transportation", "Purchased Goods & Services")
                                             )
@@ -135,7 +143,7 @@ ui <- fluidPage (theme = nada_theme,
                                         
                                     mainPanel(
                                         "Graph description",
-                                        plotOutput("scope3_plot")
+                                        circlepackeROutput("scope3_zoomcircle")
                                     )
                                     )
                                     ),
@@ -147,7 +155,7 @@ ui <- fluidPage (theme = nada_theme,
                                             sidebarPanel("Explaning this part of the tool",
                                                     radioButtons(inputId = "pick_year",
                                                                       label = "Select Year:",
-                                                                      choices = c("2019","2020"), 
+                                                                      choices = c("2019","2020") 
                                                          ),
                                                     #selectInput(
                                                         #inputId = "pick_year",
@@ -194,13 +202,11 @@ server <- function(input, output) {
     
     # graph for "2019 vs 2020" tab:    
     
-    # reactive data frame
     tot_em_reactive <- reactive({
         cf %>% 
             filter(scope %in% input$footprint_scope)
     })
     
-    # output plot #1
     output$tot_em_plot <- renderPlot({
         ggplot(data = tot_em_reactive(), aes(x = year, y = kg_co2e)) +
             geom_point(aes(colour = scope, shape = scope, size = kg_co2e)) +
@@ -210,25 +216,44 @@ server <- function(input, output) {
             guides(shape=guide_legend(title=NULL),
                    colour=guide_legend(title=NULL)) +
             labs(x = "",
-                 y = "Kg CO2 Equivalent",
-                 size = "Kg CO2 Equivalent")
+                 y = "Kilograms CO2 Equivalent",
+                 size = "Kg CO2 Equivalent") 
     })
     
     # graph for "scope 3 emissions" tab:
     
-    # reactive data frame
     scope3_reactive <- reactive({
         scope3 %>% 
-            filter(category %in% input$scope3_subgroup)
+            filter(category %in% input$scope3_category)
     })
     
-    # output plot 
-    output$scope3_plot <- renderPlot({
-        ggplot(data = scope3_reactive(), aes(x = year, y = kg_co2e, fill = sub_group)) +
-            geom_col() +
-            theme_minimal()
+    output$scope3_zoomcircle <- circlepackeR::renderCirclepackeR({
+        
+        data <- data.frame(
+            root=rep("root", 15),
+            group=c(rep("group A",5), rep("group B",5), rep("group C",5)), 
+            subgroup= rep(letters[1:5], each=3),
+            subsubgroup=rep(letters[1:3], 5),
+            value=sample(seq(1:15), 15)
+        )
+        data$pathString <- paste("world", data$group, data$subgroup, data$subsubgroup, sep = "/")
+        population <- as.Node(data)
+        circlepackeR(population, size = "value", color_min = "hsl(56,80%,80%)", color_max = "hsl(341,30%,40%)")
+        
     })
     
+    # graph option #2 for "Scope 3 Emissions" tab:
+    
+    output$scope3_zoomcircle <- renderCirclepackeR({
+        req(input$scope3_category)
+        
+        zoomcircle <- scope3_4zoomcircle %>% 
+            filter(category %in% input$scope3_category) 
+        
+        node <- as.Node(zoomcircle)
+        
+        circlepackeR(node, size = "kg_co2e")
+    })
     
     # graph for "Purchased goods and services" tab
     
@@ -239,10 +264,14 @@ server <- function(input, output) {
     })
     
     output$puch_plot <- renderPlot({
-        ggplot(data = puch_reactive(), aes(x = prod_cat,y = total_kg_co2e)) +
+        ggplot(data = puch_reactive(), aes(x = total_kg_co2e, y = total_kg_co2e)) +
             geom_col(aes(fill = prod_cat)) + 
-            theme_minimal() +
-            labs(y = "Kilograms of CO2 Equivalent")
+            theme_void() +
+            theme(legend.position="none") +
+            labs(x = "") +
+            ylab(expression(paste("Kilograms CO" [2]))) +
+            theme(axis.title.y = element_text(size = 14),
+                  axis.text.y = element_text(size = 12))
     })
     
     # graph for "food waste" tab:
@@ -255,9 +284,12 @@ server <- function(input, output) {
     
     # output plot 
     output$food_waste_plot <- renderPlot({
-        ggplot(data = food_waste_reactive(), aes(x = year, y = kg_co2e, fill = sub_group)) +
+        ggplot(data = food_waste_reactive(), aes(x = year, y = kg_co2e, fill = category)) +
             geom_col() +
-            theme_minimal()
+            theme_minimal()  +
+            guides(fill=guide_legend(title=NULL)) +
+            labs(x = "",
+                 y = "Kilograms CO2 Equivalent") 
     })
     
     
