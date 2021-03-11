@@ -47,7 +47,11 @@ puch <- rbind(pur_19, pur_20) %>%
 
 packing_pun <- circleProgressiveLayout(puch$total_kg_co2e, sizetype='area')
 
-puch_data <- cbind(puch, packing_pun)
+puch_data <- cbind(puch, packing_pun) %>% 
+    mutate_if(is.numeric, ~round(., 2))
+
+puch_data$label <- paste0(puch_data$category,  puch_data$total_kg_co2e)
+puch_data$label2 <- paste0(puch_data$category, "", puch_data$year)
 
 puch_gg <- circleLayoutVertices(packing_pun, npoints=50)
 
@@ -61,9 +65,43 @@ scope3_4zoomcircle <- scope3 %>%
 
 scope3_4zoomcircle <- scope3_4zoomcircle[, c(6,1,2,3,4,5,7)]
 
-food_waste <- total_emissions %>%
-    filter(scope == "OFFSETS") %>%
-    mutate(year = as.character(year))
+diversion_cc_19 <- total_emissions %>% 
+    filter(scope ==  "OFFSETS", 
+           year == "2019") %>% 
+    filter(!sub_group == "Low") %>% 
+    filter(!sub_group == "Medium") %>% 
+    mutate(year_tot = sum(kg_co2e))
+
+diversion_cc_20 <- total_emissions %>% 
+    filter(scope ==  "OFFSETS", 
+           year == "2020") %>% 
+    filter(!sub_group == "Low") %>% 
+    filter(!sub_group == "Medium")%>% 
+    mutate(year_tot = sum(kg_co2e))
+
+diversion_cc_1 <- rbind(diversion_cc_19, diversion_cc_20)
+
+diversion_cc <- diversion_cc_1 %>% 
+    mutate(category = str_replace(category, pattern = "Compost ", replacement = "COMPOST")) %>% 
+    mutate(category = str_replace(category, pattern = "Café", replacement = "CAFÉ")) %>% 
+    mutate(kg_co2e = kg_co2e* -1,
+           year_tot = year_tot* -1)
+
+
+
+diversion_cc$fraction <- diversion_cc$kg_co2e/sum(diversion_cc$kg_co2e)
+
+diversion_cc$fraction
+
+diversion_cc$ymax <- cumsum(diversion_cc$fraction)
+
+diversion_cc$ymin <- c(0, head(diversion_cc$ymax, n=-1))
+
+diversion_cc$labelPosition <- (diversion_cc$ymax + diversion_cc$ymin) / 2
+
+diversion_cc$label <- paste0(diversion_cc$category,":\n", diversion_cc$kg_co2e, "kg")
+diversion_cc$label2 <- paste0("Carbon Savings: \n", diversion_cc$year_tot, "kg")
+
 
 
 
@@ -166,14 +204,10 @@ ui <- fluidPage (theme = nada_theme,
                                     sidebarLayout(
                                    
                                             sidebarPanel("Explaning this part of the tool",
-                                                    radioButtons(inputId = "pick_year",
-                                                                      label = "Select Year:",
-                                                                      choices = c("2019","2020") 
-                                                         ),
-                                                    #selectInput(
-                                                        #inputId = "pick_year",
-                                                            #label = "Select Year:",
-                                                             #choices = c("2019", "2020")),
+                                                         checkboxGroupInput(
+                                                             inputId = "pick_year",
+                                                             label = "Choose Year:",
+                                                             choices = c("2019", "2020")),
                                                 selectInput(
                                                     inputId = "pick_prod_cat",
               label = "Pick Product Category:",
@@ -191,12 +225,11 @@ ui <- fluidPage (theme = nada_theme,
                                     sidebarLayout(
                     
                                         sidebarPanel("Explaning this part of the tool",
-                                    checkboxGroupInput(
-                                        inputId = "food_waste_group",
-                                        label = "Select Waste", 
-                                        choices = c("Compost", "Café"
-                                                    )
-                                    )),
+                                                     radioButtons(inputId = "diversion_year",
+                                                                  label = "Select Year:",
+                                                                  choices = c("2019","2020") 
+                                                     ),
+                                    ),
                                     
                                     mainPanel(
                                         "Food Waste description",
@@ -221,10 +254,12 @@ server <- function(input, output) {
     })
     
     output$tot_em_plot <- renderPlot({
-        ggplot(data = tot_em_reactive(), aes(x = year, y = kg_co2e)) +
-            geom_point(aes(colour = scope, shape = scope, size = kg_co2e)) +
-            scale_colour_brewer(palette = "RdPu") +
-            theme_minimal() +
+        ggplot(data = tot_em_reactive(), aes(x = year, y = kg_co2e, fill = scope)) +
+            #ylim(0,90000) +
+            geom_col(aes(fill = scope)) +
+            #geom_point(aes(colour = scope, shape = scope, size = kg_co2e)) +
+            scale_fill_brewer(palette = "RdPu") +
+            theme_void() +
             scale_size_continuous(range = c(3, 10)) +
             guides(shape=guide_legend(title=NULL),
                    colour=guide_legend(title=NULL)) +
@@ -272,18 +307,20 @@ server <- function(input, output) {
     
     puch_reactive <- reactive({
         puch_data %>% 
-            filter(year == input$pick_year &
+            filter(year %in% input$pick_year &
                    prod_cat == input$pick_prod_cat)
     })
     
     output$puch_plot <- renderPlot({
-        ggplot(data = puch_reactive(), aes(x = total_kg_co2e, y = total_kg_co2e)) +
-            ylim(0,80000) + 
-            geom_col(aes(fill = prod_cat)) +
-            geom_point(aes(text = total_kg_co2e)) +
+        ggplot(data = puch_reactive(), aes(x = input$pick_year, y = total_kg_co2e)) +
+            ylim(0,90000) + 
+            geom_col(aes(fill = year)) +
+            geom_text(y = 40000, aes(label = label), size = 7, face = "bold") +
+            geom_text(y = 2000, aes(label = label2), size = 3, face = "bold") +
+            #geom_point(aes(text = total_kg_co2e)) +
             theme_void() +
             theme(legend.position="none") +
-            labs(x = "") +
+            #labs() +
             ylab(expression(paste("Kilograms CO" [2]))) +
             theme(axis.title.y = element_text(size = 14),
                   axis.text.y = element_text(size = 12))
@@ -293,18 +330,21 @@ server <- function(input, output) {
     
     # reactive data frame
     food_waste_reactive <- reactive({
-        food_waste %>% 
-            filter(category %in% input$food_waste_group)
+        diversion_cc %>% 
+            filter(year %in% input$diversion_year)
     })
     
     # output plot 
     output$food_waste_plot <- renderPlot({
-        ggplot(data = food_waste_reactive(), aes(x = year, y = kg_co2e, fill = category)) +
-            geom_col() +
-            theme_minimal()  +
-            guides(fill=guide_legend(title=NULL)) +
-            labs(x = "",
-                 y = "Kilograms CO2 Equivalent") 
+        ggplot(food_waste_reactive(), aes(ymax = ymax, ymin = ymin, xmax = 4, xmin = 3, fill = category)) +
+            geom_rect() +
+            geom_text(x = 3.25, aes(y = labelPosition, label = label), size = 7, face = "bold") +
+            geom_text(x = 1, aes(y = labelPosition, label = label2), size = 10, face = "bold") +
+            scale_fill_brewer(palette = "RdPu") +
+            coord_polar(theta = "y") +
+            xlim(c(1, 4)) +
+            theme_void() +
+            theme(legend.position = "none")
     })
     
     

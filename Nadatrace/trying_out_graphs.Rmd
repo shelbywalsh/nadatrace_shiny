@@ -169,3 +169,42 @@ ggplot(data = cf, aes(x = year, y = kg_co2e)) +
 
 ```
 
+```{r}
+diversion_cc_19 <- all %>% 
+  filter(scope ==  "OFFSETS", 
+         year == "2019") %>% 
+  filter(!sub_group == "Low") %>% 
+  filter(!sub_group == "Medium") %>% 
+  mutate()
+
+diversion_cc_20 <- all %>% 
+  filter(scope ==  "OFFSETS", 
+         year == "2020") %>% 
+  filter(!sub_group == "Low") %>% 
+  filter(!sub_group == "Medium")
+
+diversion_cc <- rbind(diversion_cc_19, diversion_cc_20)
+ 
+
+diversion_cc$fraction <- diversion_cc$kg_co2e/sum(diversion_cc$kg_co2e)
+
+diversion_cc$fraction
+
+diversion_cc$ymax <- cumsum(diversion_cc$fraction)
+
+diversion_cc$ymin <- c(0, head(diversion_cc$ymax, n=-1))
+
+diversion_cc$labelPosition <- (diversion_cc$ymax + diversion_cc$ymin) / 2
+
+diversion_cc$label <- paste0(diversion_cc$category, "\n kgCO2eq:", diversion_cc$kg_co2e)
+
+ggplot(diversion_cc, aes(ymax = ymax, ymin = ymin, xmax = 4, xmin = 3, fill = category)) +
+ geom_rect() +
+ geom_text(x = 4.4, aes(y = labelPosition, label = label), size = 3) +
+ #scale_fill_brewer(palette = "RdPu") +
+ coord_polar(theta = "y") +
+ xlim(c(1, 4)) +
+ theme_void() +
+ theme(legend.position = "none")
+```
+
