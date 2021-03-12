@@ -198,7 +198,7 @@ ui <- fluidPage (theme = nada_theme,
                                         ),
                                         
                                     mainPanel(
-                                        "Graph description",
+                                        
                                         circlepackeROutput("scope3_zoomcircle")
                                     )
                                     )
