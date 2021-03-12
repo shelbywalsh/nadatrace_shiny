@@ -84,7 +84,7 @@ diversion_cc_20 <- total_emissions %>%
 diversion_cc_1 <- rbind(diversion_cc_19, diversion_cc_20)
 
 diversion_cc <- diversion_cc_1 %>% 
-    mutate(category = str_replace(category, pattern = "Compost ", replacement = "COMPOST")) %>% 
+    mutate(category = str_replace(category, pattern = "Compost", replacement = "COMPOST")) %>% 
     mutate(category = str_replace(category, pattern = "Café", replacement = "CAFÉ")) %>% 
     mutate(kg_co2e = kg_co2e* -1,
            year_tot = year_tot* -1)
@@ -342,6 +342,9 @@ server <- function(input, output) {
     output$food_waste_plot <- renderPlot({
         ggplot(food_waste_reactive(), aes(ymax = ymax, ymin = ymin, xmax = 4, xmin = 3, fill = category)) +
             geom_rect() +
+            scale_fill_manual(values = c(
+                "COMPOST" = "turquoise1",
+                "CAFÉ" = "lightcoral")) +
             geom_text(x = 3.25, aes(y = labelPosition, label = label), size = 7) +
             geom_text(x = 1, aes(y = labelPosition, label = label2), size = 10) +
             #scale_fill_manual(c()) +
