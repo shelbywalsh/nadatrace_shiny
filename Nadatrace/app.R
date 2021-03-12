@@ -33,6 +33,8 @@ cf <- total_emissions %>%
     filter(!scope == "OFFSETS") %>% 
     mutate(year = as.character(year))
 
+cf$label <- paste0(cf$year)
+
 pur_19 <- read_csv(here("Nadatrace", "purchased_goods_19.csv")) %>% 
     clean_names()%>% 
     mutate(year = "2019")
@@ -258,11 +260,13 @@ server <- function(input, output) {
             #ylim(0,90000) +
             geom_col(aes(fill = scope)) +
             #geom_point(aes(colour = scope, shape = scope, size = kg_co2e)) +
-            scale_fill_brewer(palette = "RdPu") +
+            scale_fill_manual(values = c("SCOPE 1" = "pink",
+                                         "SCOPE 2" = "turquoise1",
+                                         "SCOPE 3" = "palevioletred2")) +
+            geom_text(y = 600, aes(label = label), size = 7, face = "bold") +
             theme_void() +
             scale_size_continuous(range = c(3, 10)) +
-            guides(shape=guide_legend(title=NULL),
-                   colour=guide_legend(title=NULL)) +
+            guides(fill=guide_legend(title=NULL)) +
             labs(x = "",
                  y = "Kilograms CO2 Equivalent",
                  size = "Kg CO2 Equivalent") 
@@ -316,7 +320,7 @@ server <- function(input, output) {
             ylim(0,90000) + 
             geom_col(aes(fill = year)) +
             geom_text(y = 40000, aes(label = label), size = 7, face = "bold") +
-            geom_text(y = 2000, aes(label = label2), size = 3, face = "bold") +
+            geom_text(y = 2000, aes(label = label2), size = 4, face = "bold") +
             #geom_point(aes(text = total_kg_co2e)) +
             theme_void() +
             theme(legend.position="none") +
@@ -340,7 +344,7 @@ server <- function(input, output) {
             geom_rect() +
             geom_text(x = 3.25, aes(y = labelPosition, label = label), size = 7, face = "bold") +
             geom_text(x = 1, aes(y = labelPosition, label = label2), size = 10, face = "bold") +
-            scale_fill_brewer(palette = "RdPu") +
+            #scale_fill_manual(c()) +
             coord_polar(theta = "y") +
             xlim(c(1, 4)) +
             theme_void() +
