@@ -163,7 +163,7 @@ ui <- fluidPage (theme = nada_theme,
                                     )),
                            tabPanel("2019 vs. 2020",
                                     sidebarLayout(
-                                        mainPanel("Graph description",
+                                        mainPanel("Here you can see the relative magnitude of CO2 emissions of Scopes 1, 2, and 3 for the years 2019 and 2020. Play around with visualizing each of them individually then all at once. Notice how Scopes 1 and 2 have comparable emissions while Scope 3 dwarfs them.",
                                                   plotOutput("tot_em_plot"
                                                   )
                                         ),
