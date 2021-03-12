@@ -101,8 +101,8 @@ diversion_cc$ymin <- c(0, head(diversion_cc$ymax, n=-1))
 
 diversion_cc$labelPosition <- (diversion_cc$ymax + diversion_cc$ymin) / 2
 
-diversion_cc$label <- paste0(diversion_cc$category,":\n", diversion_cc$kg_co2e, "kg")
-diversion_cc$label2 <- paste0("Carbon Savings: \n", diversion_cc$year_tot, "kg")
+diversion_cc$label <- paste0(diversion_cc$category,":\n", diversion_cc$kg_co2e, " kg")
+diversion_cc$label2 <- paste0("Carbon Savings: \n", diversion_cc$year_tot, " kg")
 
 
 
@@ -341,9 +341,9 @@ server <- function(input, output) {
             scale_fill_manual(values = c(
                 "COMPOST" = "turquoise1",
                 "CAFÉ" = "lightcoral")) +
-            geom_text(x = 3.25, aes(y = labelPosition, label = label), size = 7) +
+            geom_text(x = 3.45, aes(y = labelPosition, label = label), size = 6) +
             geom_text(x = 1, aes(y = labelPosition, label = label2), size = 10) +
-            #scale_fill_manual(c()) +
+           #scale_fill_manual(c()) +
             coord_polar(theta = "y") +
             xlim(c(1, 4)) +
             theme_void() +
