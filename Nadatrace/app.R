@@ -33,6 +33,8 @@ cf <- total_emissions %>%
     filter(!scope == "OFFSETS") %>% 
     mutate(year = as.character(year))
 
+cf$label <- paste0(cf$year)
+
 pur_19 <- read_csv(here("Nadatrace", "purchased_goods_19.csv")) %>% 
     clean_names()%>% 
     mutate(year = "2019")
@@ -163,12 +165,12 @@ ui <- fluidPage (theme = nada_theme,
                                     )),
                            tabPanel("2019 vs. 2020",
                                     sidebarLayout(
-                                        mainPanel("Graph description",
+                                        mainPanel("Here you can see the relative magnitude of CO2 emissions of Scopes 1, 2, and 3 for the years 2019 and 2020. Play around with visualizing each of them individually then all at once. Notice how Scopes 1 and 2 have comparable emissions while Scope 3 dwarfs them.",
                                                   plotOutput("tot_em_plot"
                                                   )
                                         ),
                                         sidebarPanel(
-                                            "Explaning this part of the tool",
+                                            
                                             checkboxGroupInput(
                                                 inputId = "footprint_scope",
                                                 label = "Choose Scope to compare carbon footprint:",
@@ -185,7 +187,7 @@ ui <- fluidPage (theme = nada_theme,
                                 sidebarLayout(
                                         
                                     sidebarPanel(
-                                        "Explaining this part of the tool",
+                                        "This tool allows you to visualize the six largest emitters of CO2 in each of the two subdivisions of Scope 3 (Purchased Goods and Services and Upstream Transportation) for both years. Try clicking through the bubbles to see who the big emitters are for each part of Scope 3.",
                                         checkboxGroupInput(
                                             inputId = "scope3_category",
                                             label = "Choose Scope 3 category to view carbon footprint:",
@@ -205,7 +207,7 @@ ui <- fluidPage (theme = nada_theme,
                                "Purchased Goods and Services",  # Tab names need work 
                                     sidebarLayout(
                                    
-                                            sidebarPanel("Explaning this part of the tool",
+                                            sidebarPanel("This tool allows you to visualize the carbon footprint of all 33 food service industry categories offerred at Nada. Try selecting different categories in just one year than click both years and see how each category's footprint changed between 2019 and 2020.",
                                                          checkboxGroupInput(
                                                              inputId = "pick_year",
                                                              label = "Choose Year:",
@@ -266,14 +268,19 @@ server <- function(input, output) {
             #geom_col(aes(fill = scope)) +
             geom_bar(stat = "identity", position = "dodge") +
             #geom_point(aes(colour = scope, shape = scope, size = kg_co2e)) +
+
             geom_text(position = position_dodge2(width = 0.9), vjust=-0.2, hjust=0.5) +
-            scale_fill_brewer(palette = "RdPu") +
-            #theme_void() +
-            theme_minimal() +
+            #scale_fill_brewer(palette = "RdPu") +
+            theme_void() +
+            #theme_minimal() +
             theme(axis.text.y=element_blank()) +
+            scale_fill_manual(values = c("SCOPE 1" = "pink",
+                                         "SCOPE 2" = "turquoise1",
+                                         "SCOPE 3" = "palevioletred2")) +
+            #geom_text(y = 600, aes(label = label), size = 7) +
+            #theme_void() +
             scale_size_continuous(range = c(3, 10)) +
-            guides(shape=guide_legend(title=NULL),
-                   colour=guide_legend(title=NULL)) +
+            guides(fill=guide_legend(title=NULL)) +
             labs(x = "",
                  y = "Kilograms CO2 Equivalent",
                  size = "Kg CO2 Equivalent") 
@@ -305,8 +312,8 @@ server <- function(input, output) {
         ggplot(data = puch_reactive(), aes(x = input$pick_year, y = total_kg_co2e)) +
             ylim(0,90000) + 
             geom_col(aes(fill = year)) +
-            geom_text(y = 40000, aes(label = label), size = 7, face = "bold") +
-            geom_text(y = 2000, aes(label = label2), size = 3, face = "bold") +
+            geom_text(y = 40000, aes(label = label), size = 7) +
+            geom_text(y = 2000, aes(label = label2), size = 4) +
             #geom_point(aes(text = total_kg_co2e)) +
             theme_void() +
             theme(legend.position="none") +
@@ -328,9 +335,9 @@ server <- function(input, output) {
     output$food_waste_plot <- renderPlot({
         ggplot(food_waste_reactive(), aes(ymax = ymax, ymin = ymin, xmax = 4, xmin = 3, fill = category)) +
             geom_rect() +
-            geom_text(x = 3.25, aes(y = labelPosition, label = label), size = 7, face = "bold") +
-            geom_text(x = 1, aes(y = labelPosition, label = label2), size = 10, face = "bold") +
-            scale_fill_brewer(palette = "RdPu") +
+            geom_text(x = 3.25, aes(y = labelPosition, label = label), size = 7) +
+            geom_text(x = 1, aes(y = labelPosition, label = label2), size = 10) +
+            #scale_fill_manual(c()) +
             coord_polar(theta = "y") +
             xlim(c(1, 4)) +
             theme_void() +
