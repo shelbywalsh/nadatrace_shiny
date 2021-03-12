@@ -236,7 +236,7 @@ ui <- fluidPage (theme = nada_theme,
                                     ),
                                     
                                     mainPanel(
-                                        "Food Waste description",
+                                        "Click between the two years to see the change in carbon offsets through food waste diversion.",
                                         plotOutput("food_waste_plot")
                                     )
                                     )
