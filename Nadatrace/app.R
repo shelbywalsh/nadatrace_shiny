@@ -228,7 +228,7 @@ ui <- fluidPage (theme = nada_theme,
                                "Food Waste Diversion",
                                     sidebarLayout(
                     
-                                        sidebarPanel("Explaning this part of the tool",
+                                        sidebarPanel("This tool allows you to visualize the two ways Nada participates in diverting food waste from the landfill, composting and the sale of 'imperfect' food in their cafe. This diversion is a CO2 offset because it precludes the need for new food to be grown for the cafe and prevents it from decomposing in a landfill where the nutrients would be lost.",
                                                      radioButtons(inputId = "diversion_year",
                                                                   label = "Select Year:",
                                                                   choices = c("2019","2020") 
