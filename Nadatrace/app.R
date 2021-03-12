@@ -174,7 +174,7 @@ ui <- fluidPage (theme = nada_theme,
                                                 choices = c("SCOPE 1", "SCOPE 2", "SCOPE 3"),
                                                 selected = c("SCOPE 1", "SCOPE 2", "SCOPE 3"))
                                         ),
-                                        mainPanel("Here you can see the relative magnitude of CO2 emissions of Scopes 1, 2, and 3 for the years 2019 and 2020. Play around with visualizing each of them individually then all at once. Notice how Scopes 1 and 2 have comparable emissions while Scope 3 dwarfs them.",
+                                        mainPanel("Here you can see the relative magnitude of CO2 emissions of Scopes 1, 2, and 3 for the years 2019 and 2020. Play around with visualizing each of them individually then all at once. Notice how Scopes 1 and 2 have comparable emissions while Scope 3 dwarfs them.(Kg CO2)",
                                                   plotOutput("tot_em_plot"
                                                   )
                                         )
@@ -208,7 +208,7 @@ ui <- fluidPage (theme = nada_theme,
                                "Purchased Goods and Services",  # Tab names need work 
                                     sidebarLayout(
                                    
-                                            sidebarPanel("This tool allows you to visualize the carbon footprint of all 33 food service industry categories offerred at Nada. Try selecting different categories in just one year than click both years and see how each category's footprint changed between 2019 and 2020.(Kg CO2)",
+                                            sidebarPanel("This tool allows you to visualize the carbon footprint of all 33 food service industry categories offerred at Nada. Try selecting different categories in just one year than click both years and see how each category's footprint changed between 2019 and 2020.",
                                                          checkboxGroupInput(
                                                              inputId = "pick_year",
                                                              label = "Choose Year:",
