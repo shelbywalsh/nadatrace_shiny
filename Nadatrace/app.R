@@ -203,7 +203,7 @@ ui <- fluidPage (theme = nada_theme,
                                "Purchased Goods and Services",  # Tab names need work 
                                     sidebarLayout(
                                    
-                                            sidebarPanel("Explaning this part of the tool",
+                                            sidebarPanel("This tool allows you to visualize the carbon footprint of all 33 food service industry categories offerred at Nada. Try selecting different categories in just one year than click both years and see how each category's footprint changed between 2019 and 2020.",
                                                          checkboxGroupInput(
                                                              inputId = "pick_year",
                                                              label = "Choose Year:",
