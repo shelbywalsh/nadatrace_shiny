@@ -139,7 +139,7 @@ ui <- fluidPage (theme = nada_theme,
                                          
                                          h5(strong("Scope 2"), "The second grouping of Nada's on-site emissions. Scope 2 is the amount of C02 emitted due to the consumption of electricity at the store. Nada's utility bills from 2019-2020 were used to determine energy consumption and CO2 equivalent was calculated from that result."),
                                          
-                                         h5(strong("Scope 3"), "The big one. Scope 3 captures the carbon footprint generated from all operations required to put food on the shelf at the Nada store. It's further divided into Purchased Goods and Services and Upstream Transportation. PG&S is the amount of emissions produced from the suppliers in the course of producing the good that Nada will sell (ie: how much carbon is emitted to take to make the candy bar). Upstream Transportation are the emissions from getting those products to the store."),
+                                         h5(strong("Scope 3"), "The big one. Scope 3 captures the carbon footprint generated from all operations required to put food on the shelf at the Nada store. It's further divided into Purchased Goods and Services and Upstream Transportation. PG&S is the amount of emissions produced from the suppliers in the course of producing the good that Nada will sell (e.g. how much carbon is emitted to make a candy bar). Upstream Transportation are the emissions from getting those products to the store."),
                                          
                                          h5("While Scopes 1 and 2 effectively capture Nada's direct carbon footprint, their committment to emissions reduction pushed them to include Scope 3 in their analysis. Because Scope 3 encapsulates the total carbon footprints of all of their suppliers as well as upstream transportation to deliver products, the user will see that in scale, it dwarfs Scopes 1 and 2. See more in How to Use this Tool."),
                                          
@@ -166,10 +166,6 @@ ui <- fluidPage (theme = nada_theme,
                                     )),
                            tabPanel("2019 vs. 2020",
                                     sidebarLayout(
-                                        mainPanel("Here you can see the relative magnitude of CO2 emissions of Scopes 1, 2, and 3 for the years 2019 and 2020. Play around with visualizing each of them individually then all at once. Notice how Scopes 1 and 2 have comparable emissions while Scope 3 dwarfs them.",
-                                                  plotOutput("tot_em_plot"
-                                                  )
-                                        ),
                                         sidebarPanel(
                                             
                                             checkboxGroupInput(
@@ -177,6 +173,10 @@ ui <- fluidPage (theme = nada_theme,
                                                 label = "Choose Scope to compare carbon footprint:",
                                                 choices = c("SCOPE 1", "SCOPE 2", "SCOPE 3"),
                                                 selected = c("SCOPE 1", "SCOPE 2", "SCOPE 3"))
+                                        ),
+                                        mainPanel("Here you can see the relative magnitude of CO2 emissions of Scopes 1, 2, and 3 for the years 2019 and 2020. Play around with visualizing each of them individually then all at once. Notice how Scopes 1 and 2 have comparable emissions while Scope 3 dwarfs them.",
+                                                  plotOutput("tot_em_plot"
+                                                  )
                                         )
                                     )
                                     
@@ -340,8 +340,8 @@ server <- function(input, output) {
         ggplot(food_waste_reactive(), aes(ymax = ymax, ymin = ymin, xmax = 4, xmin = 3, fill = category)) +
             geom_rect() +
             scale_fill_manual(values = c(
-                "COMPOST" = "turquoise1",
-                "CAFÉ" = "lightcoral")) +
+                "lightcoral",
+                "turquoise1")) +
             geom_text(x = 3.45, aes(y = labelPosition, label = label), size = 6) +
             geom_text(x = 1, aes(y = labelPosition, label = label2), size = 10) +
            #scale_fill_manual(c()) +
