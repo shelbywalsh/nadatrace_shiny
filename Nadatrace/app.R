@@ -165,15 +165,15 @@ ui <- fluidPage (theme = nada_theme,
                                     )),
                            tabPanel("2019 vs. 2020",
                                     sidebarLayout(
-                                        mainPanel("Graph description",
+                                        mainPanel("Here you can see the relative magnitude of CO2 emissions of Scopes 1, 2, and 3 for the years 2019 and 2020. Play around with visualizing each of them individually then all at once. Notice how Scopes 1 and 2 have comparable emissions while Scope 3 dwarfs them.",
                                                   plotOutput("tot_em_plot"
                                                   )
                                         ),
                                         sidebarPanel(
-                                            "Explaning this part of the tool",
+                                            
                                             checkboxGroupInput(
                                                 inputId = "footprint_scope",
-                                                label = "Choose Scope to compare carbon footprint:",
+                                                label = "Choose Scope to visualize carbon footprint:",
                                                 choices = c("SCOPE 1", "SCOPE 2", "SCOPE 3"))
                                         )
                                     )
@@ -186,7 +186,7 @@ ui <- fluidPage (theme = nada_theme,
                                 sidebarLayout(
                                         
                                     sidebarPanel(
-                                        "Explaining this part of the tool",
+                                        "This tool allows you to visualize the six largest emitters of CO2 in each of the two subdivisions of Scope 3 (Purchased Goods and Services and Upstream Transportation) for both years. Try clicking through the bubbles to see who the big emitters are for each part of Scope 3.",
                                         checkboxGroupInput(
                                             inputId = "scope3_category",
                                             label = "Choose Scope 3 category to view carbon footprint:",
@@ -205,7 +205,7 @@ ui <- fluidPage (theme = nada_theme,
                                "Purchased Goods and Services",  # Tab names need work 
                                     sidebarLayout(
                                    
-                                            sidebarPanel("Explaning this part of the tool",
+                                            sidebarPanel("This tool allows you to visualize the carbon footprint of all 33 food service industry categories offerred at Nada. Try selecting different categories in just one year than click both years and see how each category's footprint changed between 2019 and 2020.",
                                                          checkboxGroupInput(
                                                              inputId = "pick_year",
                                                              label = "Choose Year:",
