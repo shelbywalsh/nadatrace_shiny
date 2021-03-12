@@ -291,8 +291,6 @@ server <- function(input, output) {
     # graph for "Scope 3 Emissions" tab:
     
     output$scope3_zoomcircle <- renderCirclepackeR({
-        req(input$scope3_category)
-        
         zoomcircle <- scope3_4zoomcircle %>% 
             filter(category %in% input$scope3_category) 
         
