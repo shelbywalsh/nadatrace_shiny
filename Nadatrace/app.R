@@ -263,7 +263,7 @@ server <- function(input, output) {
             scale_fill_manual(values = c("SCOPE 1" = "pink",
                                          "SCOPE 2" = "turquoise1",
                                          "SCOPE 3" = "palevioletred2")) +
-            geom_text(y = 600, aes(label = label), size = 7, face = "bold") +
+            geom_text(y = 600, aes(label = label), size = 7) +
             theme_void() +
             scale_size_continuous(range = c(3, 10)) +
             guides(fill=guide_legend(title=NULL)) +
@@ -319,8 +319,8 @@ server <- function(input, output) {
         ggplot(data = puch_reactive(), aes(x = input$pick_year, y = total_kg_co2e)) +
             ylim(0,90000) + 
             geom_col(aes(fill = year)) +
-            geom_text(y = 40000, aes(label = label), size = 7, face = "bold") +
-            geom_text(y = 2000, aes(label = label2), size = 4, face = "bold") +
+            geom_text(y = 40000, aes(label = label), size = 7) +
+            geom_text(y = 2000, aes(label = label2), size = 4) +
             #geom_point(aes(text = total_kg_co2e)) +
             theme_void() +
             theme(legend.position="none") +
@@ -342,8 +342,8 @@ server <- function(input, output) {
     output$food_waste_plot <- renderPlot({
         ggplot(food_waste_reactive(), aes(ymax = ymax, ymin = ymin, xmax = 4, xmin = 3, fill = category)) +
             geom_rect() +
-            geom_text(x = 3.25, aes(y = labelPosition, label = label), size = 7, face = "bold") +
-            geom_text(x = 1, aes(y = labelPosition, label = label2), size = 10, face = "bold") +
+            geom_text(x = 3.25, aes(y = labelPosition, label = label), size = 7) +
+            geom_text(x = 1, aes(y = labelPosition, label = label2), size = 10) +
             #scale_fill_manual(c()) +
             coord_polar(theta = "y") +
             xlim(c(1, 4)) +
