@@ -172,7 +172,8 @@ ui <- fluidPage (theme = nada_theme,
                                             checkboxGroupInput(
                                                 inputId = "footprint_scope",
                                                 label = "Choose Scope to compare carbon footprint:",
-                                                choices = c("SCOPE 1", "SCOPE 2", "SCOPE 3"))
+                                                choices = c("SCOPE 1", "SCOPE 2", "SCOPE 3"),
+                                                selected = c("SCOPE 1", "SCOPE 2", "SCOPE 3"))
                                         )
                                     )
                                     
@@ -188,7 +189,8 @@ ui <- fluidPage (theme = nada_theme,
                                         checkboxGroupInput(
                                             inputId = "scope3_category",
                                             label = "Choose Scope 3 category to view carbon footprint:",
-                                            choices = c("Transportation", "Purchased Goods & Services")
+                                            choices = c("Transportation", "Purchased Goods & Services"),
+                                            selected = c("Transportation", "Purchased Goods & Services")
                                             )
                                         ),
                                         
@@ -248,18 +250,27 @@ server <- function(input, output) {
     
     # graph for "2019 vs 2020" tab:    
     
+    cf_sum <- cf %>% 
+        group_by(year, scope) %>% 
+        summarize(kg_co2e = sum(kg_co2e))
+        
+    
     tot_em_reactive <- reactive({
-        cf %>% 
+        cf_sum %>% 
             filter(scope %in% input$footprint_scope)
+            
     })
     
     output$tot_em_plot <- renderPlot({
-        ggplot(data = tot_em_reactive(), aes(x = year, y = kg_co2e, fill = scope)) +
-            #ylim(0,90000) +
-            geom_col(aes(fill = scope)) +
+        ggplot(data = tot_em_reactive(), aes(x = year, y = kg_co2e, fill = scope, label = kg_co2e)) +
+            #geom_col(aes(fill = scope)) +
+            geom_bar(stat = "identity", position = "dodge") +
             #geom_point(aes(colour = scope, shape = scope, size = kg_co2e)) +
+            geom_text(position = position_dodge2(width = 0.9), vjust=-0.2, hjust=0.5) +
             scale_fill_brewer(palette = "RdPu") +
-            theme_void() +
+            #theme_void() +
+            theme_minimal() +
+            theme(axis.text.y=element_blank()) +
             scale_size_continuous(range = c(3, 10)) +
             guides(shape=guide_legend(title=NULL),
                    colour=guide_legend(title=NULL)) +
@@ -268,16 +279,8 @@ server <- function(input, output) {
                  size = "Kg CO2 Equivalent") 
     })
     
-    # graph for "scope 3 emissions" tab:
     
-    scope3_reactive <- reactive({
-        scope3 %>% 
-            filter(category %in% input$scope3_category)
-    })
-    
-   
-    
-    # graph option #2 for "Scope 3 Emissions" tab:
+    # graph for "Scope 3 Emissions" tab:
     
     output$scope3_zoomcircle <- renderCirclepackeR({
         req(input$scope3_category)
