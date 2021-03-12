@@ -168,10 +168,10 @@ ui <- fluidPage (theme = nada_theme,
                                                   )
                                         ),
                                         sidebarPanel(
-                                            "Explaning this part of the tool",
+                                            
                                             checkboxGroupInput(
                                                 inputId = "footprint_scope",
-                                                label = "Choose Scope to compare carbon footprint:",
+                                                label = "Choose Scope to visualize carbon footprint:",
                                                 choices = c("SCOPE 1", "SCOPE 2", "SCOPE 3"))
                                         )
                                     )
@@ -184,7 +184,7 @@ ui <- fluidPage (theme = nada_theme,
                                 sidebarLayout(
                                         
                                     sidebarPanel(
-                                        "Explaining this part of the tool",
+                                        "This tool allows you to visualize the six largest emitters of CO2 in each of the two subdivisions of Scope 3 (Purchased Goods and Services and Upstream Transportation) for both years. Try clicking through the bubbles to see who the big emitters are for each part of Scope 3.",
                                         checkboxGroupInput(
                                             inputId = "scope3_category",
                                             label = "Choose Scope 3 category to view carbon footprint:",
