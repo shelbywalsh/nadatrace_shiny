@@ -276,7 +276,7 @@ server <- function(input, output) {
             theme(axis.text.y=element_blank()) +
             scale_fill_manual(values = c("SCOPE 1" = "pink",
                                          "SCOPE 2" = "turquoise1",
-                                         "SCOPE 3" = "palevioletred2")) +
+                                         "SCOPE 3" = "lightcoral")) +
             #geom_text(y = 600, aes(label = label), size = 7) +
             #theme_void() +
             scale_size_continuous(range = c(3, 10)) +
@@ -312,6 +312,9 @@ server <- function(input, output) {
         ggplot(data = puch_reactive(), aes(x = input$pick_year, y = total_kg_co2e)) +
             ylim(0,90000) + 
             geom_col(aes(fill = year)) +
+            scale_fill_manual(values = c(
+                "2020" = "turquoise1",
+                "2019" = "lightcoral")) +
             geom_text(y = 40000, aes(label = label), size = 7) +
             geom_text(y = 2000, aes(label = label2), size = 4) +
             #geom_point(aes(text = total_kg_co2e)) +
