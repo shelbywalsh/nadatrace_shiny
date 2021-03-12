@@ -37,7 +37,8 @@ cf$label <- paste0(cf$year)
 
 pur_19 <- read_csv(here("Nadatrace", "purchased_goods_19.csv")) %>% 
     clean_names()%>% 
-    mutate(year = "2019")
+    mutate(year = "2019") 
+    
 
 pur_20 <- read_csv(here("Nadatrace", "purchased_goods_20.csv")) %>% 
     clean_names()%>% 
@@ -215,7 +216,7 @@ ui <- fluidPage (theme = nada_theme,
                                                 selectInput(
                                                     inputId = "pick_prod_cat",
               label = "Pick Product Category:",
-              choices = c("Poultry & Eggs"= "eggs", "Cheese" = "cheese", "Meat" = "meat", "Fabrics" = "fabric","Flours" = "flours", "Bread & Bakery" = "bread", "Cookies, Crackers,  Pastas & Tortillas" = "cookie", "Sugars" = "sugar", "Coffee & Tea" = "coffee", "Pickling & Canning" = "dried", "Ice Cream" = "ice cream", "Frozen Food" = "frozen", "Scrap" = "scrap", "Condensed Dairy Products" = "dairy", "Milk" = "dairy","Soybean Processing" = "oilseed", "Oilseed Farming" = "oilseed","Snack Food" = "snack","Grain Farming" = "grain", "Fish" = "fish", "Seasonings & Dressings" = "seasoning","Breweries" = "brewery", "Florals" = "floral", "Cleaning Supplies" = "cleaning", "Toiletries" = "beauty", "Fruit & Tree Nut Farming" = "fruit", "Vegetable & Melon Farming" = "vegetable", "Apparel" = "apparel", "Glass" = "glass", "Cutlery" = "cutlery", "Paper" = "paper", "Metal" = "metal", "Fibers & Yarn" = "thread", "Honey" = "honey","Other (Food)" = "other food", "Other (Non Food)" = "other all"), selected = "Vegetable & Melon Farming")),
+              choices = c("Poultry & Eggs"= "eggs", "Cheese" = "cheese", "Meat" = "meat", "Fabrics" = "fabric","Flours" = "flours", "Bread & Bakery" = "bread", "Cookies, Crackers,  Pastas & Tortillas" = "cookie", "Sugars" = "sugar", "Coffee & Tea" = "coffee", "Pickling & Canning" = "dried", "Ice Cream" = "ice cream", "Frozen Food" = "frozen", "Scrap" = "scrap", "Condensed Dairy Products" = "cond_d", "Milk" = "dairy","Soybean Processing" = "soy", "Oilseed Farming" = "oilseed","Snack Food" = "snack","Grain Farming" = "grain", "Fish" = "fish", "Seasonings & Dressings" = "seasoning","Breweries" = "brewery", "Florals" = "floral", "Cleaning Supplies" = "cleaning", "Toiletries" = "beauty", "Fruit & Tree Nut Farming" = "fruit", "Vegetable & Melon Farming" = "vegetable", "Apparel" = "apparel", "Glass" = "glass", "Cutlery" = "cutlery", "Paper" = "paper", "Metal" = "metal", "Fibers & Yarn" = "thread", "Honey" = "honey","Other (Food)" = "other food", "Other (Non Food)" = "other all"), selected = "Vegetable & Melon Farming")),
                                    
                                    mainPanel(
                                        "Purchased Goods & Services Description",
