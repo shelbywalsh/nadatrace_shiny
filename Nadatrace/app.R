@@ -298,7 +298,7 @@ server <- function(input, output) {
         
         node <- as.Node(zoomcircle)
         
-        circlepackeR(node, size = "kg_co2e")
+        circlepackeR(node, size = "kg_co2e", color_max = "#2F24A8", color_min = "#EBFFFF")
     })
     
     # graph for "Purchased goods and services" tab
